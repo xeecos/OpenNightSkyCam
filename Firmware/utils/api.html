@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>EzCam</title>
+    <style>
+        body
+        {
+            margin:0 0;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            margin: 3em 0 1em;
+        }
+        img
+        {
+            max-width:calc( 100% - 20px );
+        }
+        p, ul, ol {
+            margin-bottom: 2em;
+            color: #1d1d1d;
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const FRAMESIZE_QQVGA = 1;
+        const FRAMESIZE_QVGA = 5;
+        const FRAMESIZE_VGA = 8;
+        const FRAMESIZE_FHD = 15;
+        let waitTime = 1000;
+        function changeFrameSize(framesize)
+        {
+            let size_id;
+            let vstart = 0;
+            let hstart = 0;
+            switch(framesize)
+            {
+                case "FHD":
+                    size_id = FRAMESIZE_FHD;
+                    waitTime = 4000;
+                break;
+                case "VGA":
+                    size_id = FRAMESIZE_VGA;
+                    hstart = 640;
+                    vstart = 300;
+                    waitTime = 1000;
+                break;
+                case "QVGA":
+                    size_id = FRAMESIZE_QVGA;
+                    hstart = 800;
+                    vstart = 420;
+                    waitTime = 500;
+                break;
+                case "QQVGA":
+                    size_id = FRAMESIZE_QQVGA;   
+                    hstart = 880;
+                    vstart = 480; 
+                    waitTime = 500;
+                break;
+            };
+            request(`/capture/set?framesize=${size_id}&vstart=${vstart}&hstart=${hstart}`).then(res=>{
+                console.log(JSON.parse(res))
+            });
+        }
+        function request (url) {
+            return new Promise(resolve=>{
+                document.getElementById('log').innerText = "loading...";
+                let oReq = new XMLHttpRequest();
+                oReq.addEventListener("load", function(){
+                    document.getElementById('log').innerText = this.responseText;
+                    resolve(this.responseText);
+                });
+                oReq.open("GET", url);
+                oReq.send();
+            });
+  
+        }
+        function onShot()
+        {
+            document.getElementById('log').innerText = "Capturing";
+            request('/capture/shot').then(res=>{
+                let obj = JSON.parse(res);
+                setTimeout(()=>{
+                    document.getElementById('log').innerText = "Done";
+                    onReload();
+                },obj.time*1.0+waitTime);
+            });
+        }
+        function onReload()
+        {
+            document.getElementById('preview').src = '/preview/latest.jpg?time='+Date.now();
+            document.getElementById('preview').style['max-width'] = "calc( 100% - 20px )";
+        }
+        function onAutoReload()
+        {
+            console.log("reload")
+        }
+        function onExposure()
+        {
+            let exp = document.getElementById('exposure').value * 1.0;
+            request(`/capture/set?coarse=${exp}&fine=${1}`).then(res=>{
+                console.log(JSON.parse(res))
+            });
+        }
+    </script>
+    <ul><img id="preview" src="/preview/latest.jpg"/></ul>
+    
+    <ul>
+        <p id="log"></p>
+    </ul>
+    <ul>
+        <button onclick="changeFrameSize('QQVGA')">120P</button>
+        <button onclick="changeFrameSize('QVGA')">240P</button>
+        <button onclick="changeFrameSize('VGA')">480P</button>
+        <button onclick="changeFrameSize('FHD')">1080P</button>
+    </ul>
+
+    <ul>
+        <button onclick="onShot()">Shot</button>
+        <button onclick="onAutoReload()">AutoReload</button>
+        <button onclick="onReload()">Reload</button>
+    </ul>
+    <ul>
+        <input id="exposure" type="number" value="1000"/><button onclick="onExposure()">Exposure</button>
+    </ul>
+    <ul>
+        <li>间隔时间：<input id="interval" type="number" value="0"/></li>
+        <li>拍摄帧数：<input id="frames" type="number" value="800"/></li>
+        <button onclick="onTask()">start task</button>
+    </ul>
+</body>
+</html>
