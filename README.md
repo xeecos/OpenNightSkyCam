@@ -1,1 +1,1 @@
-# OpenTimelapseCam
+# OpenNightSkyCam
