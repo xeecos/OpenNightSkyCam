@@ -19,38 +19,41 @@ WebServer server(80);
 AsyncUDP udp;
 void service_reconnect()
 {
-    WiFi.mode(WIFI_STA);
+    // WiFi.mode(WIFI_STA);
     WiFi.setAutoConnect(true);
     WiFi.setAutoReconnect(true);
-    // WiFi.mode(WIFI_MODE_AP);
-    // WiFi.softAP("ONS-Cam","12345678");
+    WiFi.mode(WIFI_MODE_AP);
+    WiFi.softAP("NightSkyCam","");
     String ssid = "";
     ssid += global_get_ssid();
     String password = "";
     password += global_get_password();
     LOG_UART("ssid:%s pwd:%s\n", ssid.c_str(), password.c_str());
     WiFi.begin(ssid.c_str(), password.c_str());
-    // if (!MDNS.begin("ONS-Cam")) {}
-    int timeout = 20;
-    LOG_UART("connecting");
-    while (WiFi.status() != WL_CONNECTED && timeout > 0)
+    if (MDNS.begin("cam")) 
     {
-        delay(500);
-        LOG_UART(".");
-        timeout--;
+        //browse "http://cam.local"
     }
-    LOG_UART("\n");
+    // int timeout = 20;
+    // LOG_UART("connecting");
+    // while (WiFi.status() != WL_CONNECTED && timeout > 0)
+    // {
+    //     delay(500);
+    //     LOG_UART(".");
+    //     timeout--;
+    // }
+    // LOG_UART("\n");
     // WiFi.setSleep(true);
-    LOG_UART("IP address: %s\n", WiFi.localIP().toString().c_str());
+    // LOG_UART("IP address: %s\n", WiFi.localIP().toString().c_str());
 }
 void wifi_task() // void *arg
 {
-    while (!global_has_ssid() || !global_has_password())
-    {
-        global_set_ssid("ONS-Cam");
-        global_set_password("12345678");
-        delay(1000);
-    }
+    // while (!global_has_ssid() || !global_has_password())
+    // {
+    //     global_set_ssid("NightSkyCam");
+    //     global_set_password("12345678");
+    //     delay(1000);
+    // }
     service_reconnect();
     
     server.onNotFound([=]()
