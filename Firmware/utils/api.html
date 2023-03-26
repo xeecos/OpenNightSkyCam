@@ -21,10 +21,110 @@
             color: #1d1d1d;
             font-family: sans-serif;
         }
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+
+        /* Style the buttons that are used to open the tab content */
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+        }
+
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #ddd;
+        }
+
+        /* Create an active/current tablink class */
+        .tab button.active {
+            background-color: #ccc;
+        }
+
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
     </style>
 </head>
 <body>
+    <div class="tab">
+        <button id="defaultOpen" class="tablinks" onclick="openPage(event, 'Preview')">Preview</button>
+        <button class="tablinks" onclick="openPage(event, 'Task')">Task</button>
+        <button class="tablinks" onclick="openPage(event, 'Browser')">Browser</button>
+      </div>
+      <div id="Preview" class="tabcontent">
+        <p>
+            <ul><img id="preview" src="/preview/latest.jpg"/></ul>
+    
+            <ul>
+                <button onclick="changeFrameSize('QQVGA')">120P</button>
+                <button onclick="changeFrameSize('QVGA')">240P</button>
+                <button onclick="changeFrameSize('VGA')">480P</button>
+                <button onclick="changeFrameSize('FHD')">1080P</button>
+            </ul>
+        </p>
+      </div>
+      
+      <div id="Task" class="tabcontent">
+        <p>
+            <ul>
+                <li>间隔时间：<input id="interval" type="number" value="0"/></li>
+                <li>拍摄帧数：<input id="frames" type="number" value="800"/></li>
+                <button onclick="onTask()">start task</button>
+            </ul>
+        </p>
+      </div>
+      
+      <div id="Browser" class="tabcontent">
+        <p>
+            <ul>
+                <p id="log"></p>
+            </ul>
+            
+        
+            <ul>
+                <button onclick="onShot()">Shot</button>
+                <button onclick="onAutoReload()">AutoReload</button>
+                <button onclick="onReload()">Reload</button>
+            </ul>
+            <ul>
+                <input id="exposure" type="number" value="1000"/><button onclick="onExposure()">Exposure</button>
+            </ul>
+        </p>
+      </div>
     <script>
+        document.getElementById("defaultOpen").click();
+        function openPage(evt, pageName) {
+            // Declare all variables
+            var i, tabcontent, tablinks;
+
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(pageName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
         const FRAMESIZE_QQVGA = 1;
         const FRAMESIZE_QVGA = 5;
         const FRAMESIZE_VGA = 8;
@@ -105,30 +205,6 @@
             });
         }
     </script>
-    <ul><img id="preview" src="/preview/latest.jpg"/></ul>
     
-    <ul>
-        <p id="log"></p>
-    </ul>
-    <ul>
-        <button onclick="changeFrameSize('QQVGA')">120P</button>
-        <button onclick="changeFrameSize('QVGA')">240P</button>
-        <button onclick="changeFrameSize('VGA')">480P</button>
-        <button onclick="changeFrameSize('FHD')">1080P</button>
-    </ul>
-
-    <ul>
-        <button onclick="onShot()">Shot</button>
-        <button onclick="onAutoReload()">AutoReload</button>
-        <button onclick="onReload()">Reload</button>
-    </ul>
-    <ul>
-        <input id="exposure" type="number" value="1000"/><button onclick="onExposure()">Exposure</button>
-    </ul>
-    <ul>
-        <li>间隔时间：<input id="interval" type="number" value="0"/></li>
-        <li>拍摄帧数：<input id="frames" type="number" value="800"/></li>
-        <button onclick="onTask()">start task</button>
-    </ul>
 </body>
 </html>
