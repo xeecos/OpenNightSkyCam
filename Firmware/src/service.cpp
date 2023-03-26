@@ -139,105 +139,108 @@ void wifi_task() // void *arg
         server.send(200, "text/plain", "hello from ezcam!"); });
 
     server.on("/task/add", [=]()
-              { 
+    { 
         //http://192.168.31.194/task/add?delay=1000&during=3000&count=10&mode=3&exposure=1.0&gain=0&resolution=0
         task_add(server.arg("delay").toInt(), server.arg("interval").toInt(), server.arg("frames").toInt(), (RECORD_MODE)server.arg("mode").toInt(),server.arg("coarse").toInt(),server.arg("fine").toInt(),server.arg("r_gain").toFloat(),server.arg("gr_gain").toFloat(),server.arg("gb_gain").toFloat(),server.arg("b_gain").toFloat(),server.arg("resolution").toInt());
-        server.send(200, "text/json", "{\"err\":0}"); });
+        server.send(200, "text/json", "{\"err\":0}"); 
+    });
     server.on("/capture/set", [=]()
-              {
+    {
         sensor_t *s = esp_camera_sensor_get();
         if(server.hasArg("test"))
-       {
+        {
             s->set_colorbar(s,(framesize_t)server.arg("test").toInt());
         }
         if(server.hasArg("reg")&&server.hasArg("val"))
-       {
+        {
             s->set_reg(s,server.arg("reg").toInt(),server.arg("val").toInt());
         }
         if(server.hasArg("agc"))
-       {
+        {
             s->set_gain_ctrl(s,(framesize_t)server.arg("agc").toInt());
         }
         if(server.hasArg("aec"))
-       {
+        {
             s->set_exposure_ctrl(s,(int)server.arg("aec").toInt());
         }
         if(server.hasArg("coarse")&&server.hasArg("fine"))
-       {
+        {
             s->set_aec_exposure(s,server.arg("coarse").toInt(),server.arg("fine").toInt());
         } 
         if(server.hasArg("binning"))
-       {
+        {
             s->set_binning(s,server.arg("binning").toInt());
         }
         if(server.hasArg("binning_mode"))
-       {
+        {
             s->set_binning_mode(s,server.arg("binning_mode").toInt());
         }
         if(server.hasArg("pixformat"))
-       {
+        {
             s->set_pixformat(s,(pixformat_t)server.arg("pixformat").toInt());
         }
         if(server.hasArg("vstart"))
-       {
+        {
             s->set_vstart(s,(framesize_t)server.arg("vstart").toInt());
         }
         if(server.hasArg("hstart"))
-       {
+        {
             s->set_hstart(s,(framesize_t)server.arg("hstart").toInt());
         }
         if(server.hasArg("framesize"))
-       {
+        {
             s->set_framesize(s,(framesize_t)server.arg("framesize").toInt());
         }
         if(server.hasArg("hmirror"))
-       {
+        {
             s->set_hmirror(s,(framesize_t)server.arg("hmirror").toInt());
         }
         if(server.hasArg("vflip"))
-       {
+        {
             s->set_vflip(s,(framesize_t)server.arg("vflip").toInt());
         }
         if(server.hasArg("blc"))
-       {
+        {
             s->set_blc(s,server.arg("blc").toInt());
         }
         if(server.hasArg("quality"))
-       {
+        {
             s->set_quality(s,server.arg("quality").toInt());
         }
         if(server.hasArg("gain"))
-       {
+        {
             float gain = server.arg("gain").toFloat();
             s->set_agc_gain(s,gain);
         }
         if(server.hasArg("hblank"))
-       {
+        {
             s->set_hblank(s, server.arg("hblank").toInt());
         }
         if(server.hasArg("vblank"))
-       {
+        {
             s->set_vblank(s, server.arg("vblank").toInt());
         }
         if(server.hasArg("xclk"))
-       {
+        {
             s->set_xclk(s,server.arg("xclk").toInt());
         }
         if(server.hasArg("r_gain")&&server.hasArg("gr_gain")&&server.hasArg("gb_gain")&&server.hasArg("b_gain"))
-       {
+        {
             s->set_agc_gain_custom(s,server.arg("r_gain").toFloat(),server.arg("gr_gain").toFloat(),server.arg("gb_gain").toFloat(),server.arg("b_gain").toFloat());
         }
-        server.send(200, "text/json", "{\"err\":0}"); });
+        server.send(200, "text/json", "{\"err\":0}"); 
+    });
     server.on("/capture/shot", [=]()
-              { 
+    { 
         char *json_str = (char*)malloc(256);
         sensor_t *s = esp_camera_sensor_get();
         sprintf(json_str,"{\"err\":0,\"time\":\"%d\"}\0",s->status.coarse);
         server.send(200, "text/json", json_str);
         free(json_str); 
-        capture_take(true); });
+        capture_take(true); 
+    });
     server.on("/storage/set", [=]()
-              { 
+    { 
         if(server.hasArg("mode"))
         {
             if(server.arg("mode").equals("udisk"))
@@ -252,75 +255,85 @@ void wifi_task() // void *arg
         char *json_str = (char*)malloc(256);
         sprintf(json_str,"{\"err\":0}\0");
         server.send(200, "text/json", json_str);
-        free(json_str); });
+        free(json_str); 
+    });
     server.on("/time/set", [=]()
-              { 
+    { 
         if(server.hasArg("time"))
-       {
+        {
             global_set_time(server.arg("time").toInt());
             server.send(200, "text/json", "{\"err\":0}"); 
         }
         else
-       {
+        {
             server.send(200, "text/json", "{\"err\":-1}");
-        } });
+        } 
+    });
 
     server.on("/task/status", [=]()
-              { 
+    { 
         char *json_str = (char*)malloc(128);
         sprintf(json_str, "{\"err\":0,\"name\":\"%s\",\"total\":%d,\"current\":%d}\0", task_get_name(),task_get_total(),task_get_index());
         server.send(200, "text/json", json_str); 
-        free(json_str); });
+        free(json_str); 
+    });
     server.on("/task/add", [=]()
-              { 
-        //http://192.168.31.194/task/add?delay=1000&during=3000&count=10&mode=3&exposure=1.0&gain=0&resolution=0
+    { 
         task_add(server.arg("delay").toInt(), server.arg("during").toInt(), server.arg("frames").toInt(), (RECORD_MODE)server.arg("mode").toInt(),server.arg("coarse").toInt(),server.arg("fine").toInt(),server.arg("r_gain").toFloat(),server.arg("gr_gain").toFloat(),server.arg("gb_gain").toFloat(),server.arg("b_gain").toFloat(),server.arg("resolution").toInt());
-        server.send(200, "text/json", "{\"err\":0}"); });
+        server.send(200, "text/json", "{\"err\":0}"); 
+    });
     server.on("/task/start", [=]()
-              { 
+    { 
         task_start();
         char *json_str = (char*)malloc(128);
         sprintf(json_str, "{\"err\":0,\"name\":\"%s\"}\0", task_get_name());
         server.send(200, "text/json", json_str); 
-        free(json_str); });
+        free(json_str); 
+    });
     server.on("/task/stop", [=]()
-              { 
+    { 
         task_stop();
-        server.send(200, "text/json", "{\"err\":0}"); });
+        server.send(200, "text/json", "{\"err\":0}"); 
+    });
     server.on("/task/resume", [=]()
-              { server.send(200, "text/json", "{\"version\":\"1.0\"}"); });
+    { 
+        server.send(200, "text/json", "{\"version\":\"1.0\"}"); 
+    });
     server.on("/time/get", [=]()
-              { 
+    { 
         char*str = (char*)malloc(128);
         sprintf(str,"{\"err\":0,\"time\":%d}\0",global_get_time());
         server.send(200, "text/json", str); 
-        free(str); });
+        free(str); 
+    });
     server.on(
         "/upload", HTTP_POST, [=]()
-        { server.send(200, "application/json", "{\"res\":\"uploaded\"}"); },
-        [=]()
+    { 
+        server.send(200, "application/json", "{\"res\":\"uploaded\"}"); 
+    },
+    [=]()
+    {
+        HTTPUpload &upload = server.upload();
+        if (upload.status == UPLOAD_FILE_START)
         {
-            HTTPUpload &upload = server.upload();
-            if (upload.status == UPLOAD_FILE_START)
+            String filename = server.arg(0);
+            if (SD_MMC.exists((char *)filename.c_str()))
             {
-                String filename = server.arg(0);
-                if (SD_MMC.exists((char *)filename.c_str()))
-                {
-                    SD_MMC.remove((char *)filename.c_str());
-                }
-                tf_begin_write(filename.c_str());
+                SD_MMC.remove((char *)filename.c_str());
             }
-            else if (upload.status == UPLOAD_FILE_WRITE)
-            {
-                tf_write_file(upload.buf, upload.currentSize);
-            }
-            else if (upload.status == UPLOAD_FILE_END)
-            {
-                tf_end_write();
-            }
-        });
+            tf_begin_write(filename.c_str());
+        }
+        else if (upload.status == UPLOAD_FILE_WRITE)
+        {
+            tf_write_file(upload.buf, upload.currentSize);
+        }
+        else if (upload.status == UPLOAD_FILE_END)
+        {
+            tf_end_write();
+        }
+    });
     server.on("/info", HTTP_GET, [=]()
-              { 
+    { 
         if(server.hasArg("test"))
         {
             LOG_UART("arg:%.2f\n",server.arg("test").toFloat());
@@ -328,7 +341,8 @@ void wifi_task() // void *arg
         char *json_str = (char*)malloc(128);
         sprintf(json_str, "{\"err\":0,\"version\":\"EZCAM V1.0.0\"}\0");
         server.send(200, "text/json", json_str); 
-        free(json_str); });
+        free(json_str); 
+    });
     server.enableCrossOrigin(true);
     server.enableCORS(true);
     server.enableDelay(true);
@@ -344,7 +358,6 @@ void service_turn_off()
         esp_wifi_disconnect();
         esp_wifi_set_ps(WIFI_PS_MAX_MODEM);
     }
-		
 }
 void service_turn_on()
 {
@@ -363,7 +376,6 @@ void service_init()
     msg = (char *)malloc(128);
     memset(msg, 0, 128);
     wifi_task();
-    // xTaskCreatePinnedToCore(wifi_task, "wifi_task", 8192, NULL, 10, NULL, 1);
 }
 const char *service_get_ip()
 {
@@ -395,7 +407,6 @@ void service_parse(char *msg)
     {
         int cmd = strtod(msg + 1, NULL), end, time;
         float gain_r, gain_g, gain_b;
-        // LOG_UART("cmd:%d\n", cmd);
         sensor_t *s = esp_camera_sensor_get();
         switch (cmd)
         {

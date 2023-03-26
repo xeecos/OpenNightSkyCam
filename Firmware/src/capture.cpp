@@ -38,7 +38,6 @@ static camera_config_t camera_config = {
     .ledc_timer = LEDC_TIMER_0,
     .ledc_channel = LEDC_CHANNEL_0,
     .pixel_format = PIXFORMAT_RAW,
-    // .pixel_format = PIXFORMAT_JPEG,
     .frame_size = CMOS_FRAMESIZE,
     .bits = CMOS_BITS,
     .fb_count = 1,
@@ -89,11 +88,7 @@ void IRAM_ATTR capture_task(void *arg)
     // #endif
     output = (camera_fb_t *)calloc(sizeof(camera_fb_t), 1);
     output->buf = (uint8_t *)heap_caps_malloc(resolution[s->status.framesize].width * resolution[s->status.framesize].height, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
-    // prev_frame_buf = (uint8_t *)heap_caps_malloc(resolution[s->status.framesize].width * resolution[s->status.framesize].height, MALLOC_CAP_SPIRAM);
-    // s->set_aec_exposure(s,2000,1);
-    // s->take_photo(s, true, FILEFORMAT_JPEG);
     fmt2bmp(resolution[s->status.framesize].width, resolution[s->status.framesize].height, &out_bmp_buf, &out_bmp_buf_len);
-    // capture_start(true);
     while (1)
     {
         if (isCapturing)
@@ -103,7 +98,6 @@ void IRAM_ATTR capture_task(void *arg)
         }
         if (capture_started)
         {
-            // client.setNoDelay(true);
             task_set_status(TASK_CAPTURING);
             camera_fb_t *pic = esp_camera_fb_get();
             output->len = ll_cam_memcpy(cam_get_obj(), output->buf, pic->buf, pic->len);
@@ -112,46 +106,9 @@ void IRAM_ATTR capture_task(void *arg)
             task_set_status(TASK_PROCESSING);
             uint16_t w = resolution[s->status.framesize].width;
             uint16_t h = resolution[s->status.framesize].height;
-            // if (capture_mode == TASK_STARTRAILS && task_get_rest() < task_get_total() - 1)
-            // {
-            //     LOG_UART("merge");
-            //     for (int i = 0; i < pic->len; i++)
-            //     {
-            //         prev_frame_buf[i] = prev_frame_buf[i] > pic->buf[i] ? prev_frame_buf[i] : pic->buf[i];
-            //     }
-            // }
-            // else if (capture_mode == TASK_STARTRAILS)
-            // {
-            //     if (task_get_rest() == 0)
-            //     {
-            //         LOG_UART("final encode");
-            //         fmt2jpg(prev_frame_buf, pic->len, w, h, esp_camera_sensor_get()->pixformat, esp_camera_sensor_get()->status.quality, &out_jpg_buf, &out_jpg_buf_len);
-            //     }
-            //     else
-            //     {
-            //         LOG_UART("first create");
-            //         memcpy(prev_frame_buf, pic->buf, pic->len);
-            //     }
-            // }
-            // else
-            // LOG_UART("pic:%d %d %d %d\n", output->len, w, h,esp_camera_sensor_get()->status.quality);
-            //
-#ifdef USE_BMP
+            
             if (previewing)
             {
-#ifdef LCD_LED
-                uint16_t *pixels = (uint16_t *)ps_malloc(128 * 128 * 2);
-                for (int i = 0; i < 128; i++)
-                {
-                    for (int j = 0; j < 128; j++)
-                    {
-                        uint8_t c = output->buf[(i * 2 + 100) * 640 + j * 2 + 100];
-                        pixels[i * 128 + j] = gfx->color565(c, c, c);
-                    }
-                }
-                gfx->draw16bitRGBBitmap(0, 0, pixels, 128, 128);
-                free(pixels);
-#endif
                 LOG_UART("JPEG Encode:%d\n", esp_camera_sensor_get()->status.quality);
                 long t = millis();
 
@@ -160,29 +117,17 @@ void IRAM_ATTR capture_task(void *arg)
                 info.height = h;
                 info.src_type = JPEG_RAW_TYPE_GRAY;
                 info.quality = esp_camera_sensor_get()->status.quality;
-                /// allocate input buffer to fill original image  stream.
+                
                 void *el = jpeg_enc_open(&info);
                 jpeg_enc_process(el, output->buf, output->len, out_jpg_buf, 1024 * 800, &out_jpg_buf_len);
                 jpeg_enc_close(el);
-                //  fmt2jpg(output->buf, output->len, w, h, esp_camera_sensor_get()->pixformat, esp_camera_sensor_get()->status.quality, &out_jpg_buf, &out_jpg_buf_len);
+                
                 LOG_UART("Finish JPEG Encode:%d size:%d %d\n", millis() - t, out_jpg_buf_len, output->len);
                 __image_ready = true;
             }
             else
             {
             }
-#else
-            fmt2jpg(output->buf, output->len, w, h, esp_camera_sensor_get()->pixformat, esp_camera_sensor_get()->status.quality, &out_jpg_buf, &out_jpg_buf_len);
-#endif
-            // LOG_UART("w: %d h:%d\n",w,h);
-            // task_set_status(TASK_STORING);
-            // LOG_UART("pic:%d, %d\n", pic->len,out_jpg_buf_len);
-            // char*image_store_url = (char*)malloc(128);
-            // if(previewing)
-            // {
-            //     sprintf(image_store_url,"/preview/%04d-%02d-%02d/%02d%02d%02d%04d.jpg\0",year(),month(),day(),hour(),minute(),second(),capture_index++);
-            // }
-
             __ready = true;
         }
         delay(1);
@@ -191,22 +136,6 @@ void IRAM_ATTR capture_task(void *arg)
 }
 void capture_init()
 {
-#ifdef LCD_LED
-    pinMode(LCD_LED, OUTPUT);
-    digitalWrite(LCD_LED, LOW);
-
-    gfx->begin();
-    gfx->fillScreen(BLACK);
-
-    gfx->setCursor(0, 52);
-    gfx->setTextColor(RED);
-    gfx->setTextSize(2);
-    gfx->println("Hello World!");
-
-    w = gfx->width();
-    h = gfx->height();
-    USBSerial.printf("w:%d,h:%d\n", w, h);
-#endif
     ez_camera_init(&camera_config);
     xTaskCreatePinnedToCore(capture_task, "capture_task", 8192, NULL, 10, NULL, 1);
     // xTaskCreatePinnedToCore(store_task, "store_task", 8192, NULL, 10, NULL, 1);
@@ -259,8 +188,6 @@ void capture_run()
 #ifndef ENABLE_SOCKET_SERVER
             if ((capture_mode == TASK_STARTRAILS && task_get_rest() == 0) || capture_mode != TASK_STARTRAILS)
             {
-                // if(!tf_fulldisk())
-                {
 #ifdef USE_BMP
                     LOG_UART("bmp start\n");
                     long t = millis();
@@ -279,14 +206,12 @@ void capture_run()
                     {
                         service_turn_on();
                     }
-                }
             }
 #endif
         }
         task_set_status(TASK_IDLE);
         __ready = false;
     }
-    // store_task(NULL);
 }
 
 bool capture_ready()
