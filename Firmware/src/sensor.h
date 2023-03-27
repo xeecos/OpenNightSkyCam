@@ -10,43 +10,19 @@ extern "C"
 
     typedef enum
     {
-        BF3003_PID = 0x30,
-        OV2640_PID = 0x26,
         AR0130_PID = 0x2402,
-        AR0237_PID = 0x0256,
-        SC200AI_PID = 0xCB,
-        IMX290_PID = 0xB2,
-        MT9V034_PID = 0x3660,
-        MT9M001_PID = 0x5640,
-        MT9P001_PID = 0x76
     } camera_pid_t;
 
     typedef enum
     {
-        CAMERA_BF3003,
-        CAMERA_OV2640,
-        CAMERA_MT9V034,
         CAMERA_AR0130,
-        CAMERA_AR0237,
-        CAMERA_IMX290,
-        CAMERA_MT9M001,
-        CAMERA_MT9P001,
-        CAMERA_SC200AI,
         CAMERA_MODEL_MAX,
         CAMERA_NONE,
     } camera_model_t;
 
     typedef enum
     {
-        BF3003_SCCB_ADDR = 0x6E, // 0x60 >> 1
-        OV2640_SCCB_ADDR = 0x30, 
-        SC200AI_SCCB_ADDR = 0x30,
         AR0130_SCCB_ADDR = 0x10,
-        IMX290_SCCB_ADDR = 0x1A,
-        AR0237_SCCB_ADDR = 0x10,  // 0x42 >> 1
-        MT9V034_SCCB_ADDR = 0x3C, // 0x78 >> 1
-        MT9M001_SCCB_ADDR = 0x21, // 0x42 >> 1
-        MT9P001_SCCB_ADDR = 0x2A, // 0x54 >> 1
     } camera_sccb_addr_t;
 
     typedef enum

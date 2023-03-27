@@ -49,13 +49,8 @@ static const char *CAMERA_SENSOR_NVS_KEY = "sensor";
 static const char *CAMERA_PIXFORMAT_NVS_KEY = "pixformat";
 static camera_state_t *s_state = NULL;
 
-// #if CONFIG_IDF_TARGET_ESP32S3 // LCD_CAM module of ESP32-S3 will generate xclk
-// #define CAMERA_ENABLE_OUT_CLOCK(v)
-// #define CAMERA_DISABLE_OUT_CLOCK()
-// #else
 #define CAMERA_ENABLE_OUT_CLOCK(v) camera_enable_out_clock((v))
 #define CAMERA_DISABLE_OUT_CLOCK() camera_disable_out_clock()
-// #endif
 
 typedef struct {
     int (*detect)(int slv_addr, sensor_id_t *id);
@@ -161,56 +156,6 @@ static esp_err_t camera_probe( camera_config_t *config, camera_model_t *out_came
 }
 esp_err_t ez_camera_init( camera_config_t *config)
 {
-    //配置模块时钟
-    //配置信号引脚
-    //HSYNC是否有效置位或清零 LCD_CAM_CAM_VH_DE_MODE_EN；
-    //配置正确的接收通道模式和接收数据模式，置位 LCD_CAM_CAM_UPDATE；
-    //根据 26.3.4 小节的描述，复位接收控制单元 (Camera_Ctrl) 和 Async Rx FIFO；
-    //根据 26.5 小节的描述使能相应的中断；
-    //配置 GDMA 接收链表，并在 LCD_CAM->CAM_REC_DATA_BYTELEN 中配置接收数据长度；
-    //开始接收数据：在主机模式下，等待从机准备好后，置位 LCD_CAM_CAM_START 开始接收数据；
-    //接收数据，并存到 ESP32-S3 存储器的指定地址。最终产生步骤 6 中设置的中断。
-    /*
-    • LCD_CAM->CAM_HS_INT ：当 Camera 接收行数大于等于 LCD_CAM->CAM_LINE_INT_NUM 配置的值 + 1 即触发此中断。
-    • LCD_CAM->CAM_VSYNC_INT ：当 Camera 接收到帧指示信号 VSYNC 即触发此中断。
-    */
-   /**
-    * 寄存器 LCD_CAM_CAM_CTRL_REG 中 LCD_CAM_CAM_CLK_SEL 用于选择时钟源：
-        • 0：关闭 CAM 时钟源；
-        • 1：选择 XTAL_CLK；
-        • 2：选择 PLL_240M_CLK；
-        • 3：选择 PLL_160M_CLK
-    
-        f_CAM_CLK = f_CAM_CLK_S/(N + b/a)
-    
-    其中，2 <= N <= 256，N 对应为 LCD_CAM_CAM_CTRL_REG 寄存器中 LCD_CAM_CAM_CLKM_DIV_NUM 的值，具体为：
-        • LCD_CAM->CAM_CLKM_DIV_NUM = 0 时，N = 256；
-        • LCD_CAM->CAM_CLKM_DIV_NUM = 1 时，N = 2；
-        • LCD_CAM->CAM_CLKM_DIV_NUM 为其它值时，N = LCD_CAM_CAM_CLKM_DIV_NUM 的值。
-        b 对应 LCD_CAM->CAM_CLKM_DIV_B 的值，a 对应 LCD_CAM_CAM_CLKM_DIV_A 的值。对于整数分频，LCD_CAM_CAM_CLKM_DIV_A 和 LCD_CAM_CAM_CLKM_DIV_B 都清零；对于小数分频，LCD_CAM_CAM_CLKM_DIV_B的值应小于 LCD_CAM_CAM_CLKM_DIV_A 的值。
-    */
-   /*
-   主机接收模式:
-        CAM_PCLK 输入 像素时钟输入信号
-        CAM_CLK 输出 主机时钟输出信号
-        CAM_V_SYNC 输入 帧同步输入信号
-        CAM_H_SYNC 输入 行同步输入信号
-        CAM_H_ENABLE 输入 行有效输入信号
-        CAM_Data_in[N:0]2 输入 并行输入数据总线，支持 8/16 位并行数据输入
-    */
-   /*
-    LCD_CAM 模块中各个单元可通过配置下列寄存器进行复位：
-        • 接收控制单元 (Camera_Ctrl) 及其格式转换模块 (RGB/YCbCr Converter)：可配置 LCD_CAM->CAM_RESET 进行复位；
-        • Async Tx FIFO：可配置 LCD_CAM->LCD_AFIFO_RESET 进行复位；
-        • Async Rx FIFO：可配置 LCD_CAM->CAM_AFIFO_RESET 进行复位。
-        注意：
-        • 上述复位寄存器均为硬件自清，即写 1 后，硬件会自动清零；
-        • 在模块和 FIFO 复位之前，需要先配置Camera模块时钟
-    */
-   /*
-    • LCD_CAM->CAM_HS_INT ：当 Camera 接收行数大于等于 LCD_CAM_CAM_LINE_INT_NUM 配置的值 + 1 即触发此中断。
-    • LCD_CAM->CAM_VSYNC_INT ：当 Camera 接收到帧指示信号 VSYNC 即触发此中断。
-    */
     esp_err_t err;
     err = cam_init(config);
 
