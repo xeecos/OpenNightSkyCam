@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <Arduino.h>
 #include <WebServer.h>
-// #define USE_MMC
+#define USE_MMC
 #ifdef USE_MMC
 #include "SD_MMC.h"
 #else

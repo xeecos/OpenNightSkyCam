@@ -11,7 +11,7 @@ void setup()
 {
     LOG_INIT(921600);
     USBSerial.setDebugOutput(false);
-    tf_unmount();
+    tf_mount();
     global_init();
     ble_init();
     service_init();

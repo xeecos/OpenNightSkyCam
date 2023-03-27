@@ -19,20 +19,19 @@ WebServer server(80);
 AsyncUDP udp;
 void service_reconnect()
 {
-    // WiFi.mode(WIFI_STA);
-    WiFi.setAutoConnect(true);
-    WiFi.setAutoReconnect(true);
-    WiFi.mode(WIFI_MODE_AP);
-    WiFi.softAP("NightSkyCam","");
+    WiFi.softAP("Night-Sky","");
     String ssid = "";
     ssid += global_get_ssid();
     String password = "";
     password += global_get_password();
     LOG_UART("ssid:%s pwd:%s\n", ssid.c_str(), password.c_str());
-    WiFi.begin(ssid.c_str(), password.c_str());
-    if (MDNS.begin("cam")) 
+    // WiFi.mode(WIFI_MODE_APSTA);
+    // WiFi.setAutoConnect(true);
+    // WiFi.setAutoReconnect(true);
+    // WiFi.begin(ssid.c_str(), password.c_str());
+    if (MDNS.begin("nscam")) 
     {
-        //browse "http://cam.local"
+        //browse "http://nscam.local"
     }
     // int timeout = 20;
     // LOG_UART("connecting");
@@ -358,8 +357,8 @@ void service_turn_off()
     {
         LOG_UART("wifi off\n");
         wifi_on = false;
-        esp_wifi_disconnect();
-        esp_wifi_set_ps(WIFI_PS_MAX_MODEM);
+        // esp_wifi_disconnect();
+        // esp_wifi_set_ps(WIFI_PS_MAX_MODEM);
     }
 }
 void service_turn_on()
@@ -368,8 +367,8 @@ void service_turn_on()
     {
         LOG_UART("wifi on\n");
         wifi_on = true;
-        esp_wifi_connect();
-        esp_wifi_set_ps(WIFI_PS_MIN_MODEM);
+        // esp_wifi_connect();
+        // esp_wifi_set_ps(WIFI_PS_MIN_MODEM);
     }
 }
 char *msg;

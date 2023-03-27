@@ -32,15 +32,7 @@ void tf_mount()
 #endif
 #ifdef CH_IN
     pinMode(CH_IN, OUTPUT);
-#ifdef DVP_AR0237_38_SDMMC_LED_KEY
     digitalWrite(CH_IN, HIGH);
-#else
-#ifdef DVP_AR0130_38_SDMMC_LED_KEY
-    digitalWrite(CH_IN, HIGH);
-#else
-    digitalWrite(CH_IN, LOW);
-#endif
-#endif
 #endif
 
 #ifdef USE_MMC
@@ -109,18 +101,8 @@ void tf_unmount()
     pinMode(CH_EN, OUTPUT);
     digitalWrite(CH_EN, LOW);
 #endif
-#ifdef CH_IN
     pinMode(CH_IN, OUTPUT);
-#ifdef DVP_AR0237_38_SDMMC_LED_KEY
     digitalWrite(CH_IN, LOW);
-#else
-#ifdef DVP_AR0130_38_SDMMC_LED_KEY
-    digitalWrite(CH_IN, LOW);
-#else
-    digitalWrite(CH_IN, HIGH);
-#endif
-#endif
-#endif
     LOG_UART("TF Unmount\n");
     noSD = true;
 }
