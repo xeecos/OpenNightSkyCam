@@ -16,18 +16,11 @@
             overflow-x: hidden;
         }
 
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
+        h1, h2, h3, h4, h5, h6 {
             margin: 3em 0 1em;
         }
 
-        p,
-        ul,
-        ol {
+        p, ul, ol {
             margin-bottom: 2em;
             color: #1d1d1d;
             font-family: sans-serif;
@@ -39,7 +32,6 @@
             background-color: #f1f1f1;
         }
 
-        /* Style the buttons that are used to open the tab content */
         .tab button {
             background-color: inherit;
             float: left;
@@ -50,17 +42,14 @@
             transition: 0.3s;
         }
 
-        /* Change background color of buttons on hover */
         .tab button:hover {
             background-color: #ddd;
         }
 
-        /* Create an active/current tablink class */
         .tab button.active {
             background-color: #ccc;
         }
 
-        /* Style the tab content */
         .tabcontent {
             display: none;
             padding: 6px 6px;
@@ -75,28 +64,23 @@
 
         .slidecontainer {
             width: 100%;
-            /* Width of the outside container */
         }
 
         .slider {
             -webkit-appearance: none;
-            /* Override default CSS styles */
             appearance: none;
             width: 100%;
-            /* Full-width */
             height: 25px;
-            /* Specified height */
             background: #d3d3d3;
-            /* Grey background */
             outline: none;
-            /* Remove outline */
             opacity: 0.7;
-            /* Set transparency (for mouse-over effects on hover) */
             -webkit-transition: .2s;
-            /* 0.2 seconds transition on hover */
             transition: opacity .2s;
         }
-
+        input
+        {
+            outline: none;
+        }
         /* Mouse-over effects */
         .slider:hover {
             opacity: 1;
@@ -155,14 +139,14 @@
         }
     </style>
     <script src="jquery.min.js"></script>
-    <script src="sw.js"></script>
+    <script src="lang.js"></script>
 </head>
 
 <body>
     <div class="tab">
         <button id="defaultOpen" class="tablinks" onclick="openPage(event, 'Preview')"
             data-sw-translate>Preview</button>
-        <button class="tablinks" onclick="openPage(event, 'Task')" data-sw-translate>Task</button>
+        <button class="tablinks" onclick="openPage(event, 'Timelapse')" data-sw-translate>Timelapse</button>
         <button class="tablinks" onclick="openPage(event, 'Browser')" data-sw-translate>Browser</button>
     </div>
     <div id="appLoading" style="display: none">
@@ -197,7 +181,7 @@
         </p>
     </div>
 
-    <div id="Task" class="tabcontent">
+    <div id="Timelapse" class="tabcontent">
         <img class="preview-img" id="preview-img" src="latest.jpg" />
         <p>
         <div style="position:relative;margin-bottom:20px;width:100%">
@@ -231,6 +215,8 @@
         document.getElementById("b-gain-input").value = document.getElementById("b-gain-range").value = localStorage.getItem("b-gain", 1);
         document.getElementById("interval-input").value = document.getElementById("interval-range").value = localStorage.getItem("interval", 1);
         document.getElementById("frames-input").value = document.getElementById("frames-range").value = localStorage.getItem("frames", 1);
+        document.getElementById("progress-input").value = " 0 / "+document.getElementById("frames-input").value;
+        document.getElementById("video-length-input").value = (document.getElementById("frames-input").value/30).toFixed(0);
         document.getElementById("exp-input").oninput = document.getElementById("exp-range").oninput = function () {
             document.getElementById("exp-input").value = this.value;
             document.getElementById("exp-range").value = this.value;
@@ -262,7 +248,7 @@
             document.getElementById("frames-range").value = this.value;
             localStorage.setItem("frames", this.value);
             
-            document.getElementById("progress-input").value = "10000 / "+document.getElementById("frames-input").value;
+            document.getElementById("progress-input").value = " 0 / "+document.getElementById("frames-input").value;
             document.getElementById("video-length-input").value = (document.getElementById("frames-input").value/30).toFixed(0);
         }
         function openPage(evt, pageName) {
