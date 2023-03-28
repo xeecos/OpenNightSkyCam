@@ -115,7 +115,7 @@ void IRAM_ATTR capture_task(void *arg)
                 jpeg_enc_info_t info = DEFAULT_JPEG_ENC_CONFIG();
                 info.width = w;
                 info.height = h;
-                info.src_type = JPEG_RAW_TYPE_GRAY;
+                info.src_type = JPEG_RAW_TYPE_RGB888;
                 info.quality = esp_camera_sensor_get()->status.quality;
                 if (info.src_type == JPEG_RAW_TYPE_GRAY)
                 {
@@ -128,7 +128,7 @@ void IRAM_ATTR capture_task(void *arg)
                     uint8_t *rgb = (uint8_t *)ps_malloc(w * h * 3);
                     for (int line = 0; line < h; line++)
                     {
-                        convert_line_format(output->buf, PIXFORMAT_RAW, rgb, w, 3, line);
+                        convert_line_format(output->buf, PIXFORMAT_RAW, rgb + line * w * 3, w, 3, line);
                     }
                     void *el = jpeg_enc_open(&info);
                     jpeg_enc_process(el, rgb, w * h * 3, out_jpg_buf, 1024 * 800, &out_jpg_buf_len);
@@ -136,7 +136,7 @@ void IRAM_ATTR capture_task(void *arg)
                     free(rgb);
                 }
 
-                LOG_UART("Finish JPEG Encode:%d size:%d %d\n", millis() - t, out_jpg_buf_len, output->len);
+                LOG_UART("Finish JPEG Encode:%d size:%d\n", millis() - t, out_jpg_buf_len);
                 __image_ready = true;
             }
             else
