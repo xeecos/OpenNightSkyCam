@@ -85,9 +85,9 @@ function onReload() {
 function onExposure() {
     return new Promise(resolve => {
         let exp = document.getElementById('exp-input').value * 1000;
-        let r_gain = document.getElementById('r-gain-input').value * 1000;
-        let g_gain = document.getElementById('g-gain-input').value * 1000;
-        let b_gain = document.getElementById('b-gain-input').value * 1000;
+        let r_gain = document.getElementById('r-gain-input').value;
+        let g_gain = document.getElementById('g-gain-input').value;
+        let b_gain = document.getElementById('b-gain-input').value;
         request(`/capture/set?coarse=${exp}&fine=${1}&r_gain=${r_gain}&gr_gain=${g_gain}&gb_gain=${g_gain}&b_gain=${b_gain}`).then(res => {
             resolve(JSON.parse(res))
         });
@@ -96,9 +96,9 @@ function onExposure() {
 function onAddTask() {
     return new Promise(resolve => {
         let exp = document.getElementById('exp-input').value * 1000;
-        let r_gain = document.getElementById('r-gain-input').value * 1000;
-        let g_gain = document.getElementById('g-gain-input').value * 1000;
-        let b_gain = document.getElementById('b-gain-input').value * 1000;
+        let r_gain = document.getElementById('r-gain-input').value;
+        let g_gain = document.getElementById('g-gain-input').value;
+        let b_gain = document.getElementById('b-gain-input').value;
         request(`/task/add?coarse=${exp}&fine=${1}&r_gain=${r_gain}&gr_gain=${g_gain}&gb_gain=${g_gain}&b_gain=${b_gain}`).then(res => {
             resolve(JSON.parse(res))
         });
@@ -106,10 +106,6 @@ function onAddTask() {
 }
 function onStartTask() {
     return new Promise(resolve => {
-        let exp = document.getElementById('exp-input').value * 1000;
-        let r_gain = document.getElementById('r-gain-input').value * 1000;
-        let g_gain = document.getElementById('g-gain-input').value * 1000;
-        let b_gain = document.getElementById('b-gain-input').value * 1000;
         request(`/task/start`).then(res => {
             resolve(JSON.parse(res))
         });
@@ -117,10 +113,6 @@ function onStartTask() {
 }
 function onStopTask() {
     return new Promise(resolve => {
-        let exp = document.getElementById('exp-input').value * 1000;
-        let r_gain = document.getElementById('r-gain-input').value * 1000;
-        let g_gain = document.getElementById('g-gain-input').value * 1000;
-        let b_gain = document.getElementById('b-gain-input').value * 1000;
         request(`/task/stop`).then(res => {
             resolve(JSON.parse(res))
         });
