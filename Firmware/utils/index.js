@@ -42,6 +42,10 @@ document.getElementById("frames-input").oninput = document.getElementById("frame
     document.getElementById("progress-input").value = " 0 / " + document.getElementById("frames-input").value;
     document.getElementById("video-length-input").value = (document.getElementById("frames-input").value / 30).toFixed(0);
 }
+document.getElementById("lang-select").oninput = function()
+{
+    console.log(this.value)
+}
 function openPage(evt, pageName) {
     let i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
