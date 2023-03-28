@@ -302,6 +302,67 @@
                 });
             })
         }
+        function onAddTask()
+        {
+            return new Promise(resolve=>{
+                let exp = document.getElementById('exp-input').value * 1000;
+                let r_gain = document.getElementById('r-gain-input').value * 1000;
+                let g_gain = document.getElementById('g-gain-input').value * 1000;
+                let b_gain = document.getElementById('b-gain-input').value * 1000;
+                request(`/task/add?coarse=${exp}&fine=${1}&r_gain=${r_gain}&gr_gain=${g_gain}&gb_gain=${g_gain}&b_gain=${b_gain}`).then(res => {
+                    resolve(JSON.parse(res))
+                });
+            })
+        }
+        function onStartTask()
+        {
+            return new Promise(resolve=>{
+                let exp = document.getElementById('exp-input').value * 1000;
+                let r_gain = document.getElementById('r-gain-input').value * 1000;
+                let g_gain = document.getElementById('g-gain-input').value * 1000;
+                let b_gain = document.getElementById('b-gain-input').value * 1000;
+                request(`/task/start`).then(res => {
+                    resolve(JSON.parse(res))
+                });
+            })
+        }
+        function onStopTask()
+        {
+            return new Promise(resolve=>{
+                let exp = document.getElementById('exp-input').value * 1000;
+                let r_gain = document.getElementById('r-gain-input').value * 1000;
+                let g_gain = document.getElementById('g-gain-input').value * 1000;
+                let b_gain = document.getElementById('b-gain-input').value * 1000;
+                request(`/task/stop`).then(res => {
+                    resolve(JSON.parse(res))
+                });
+            })
+        }
+        function getTaskStatus()
+        {
+            return new Promise(resolve=>{
+                request(`/task/status`).then(res => {
+                    resolve(JSON.parse(res))
+                });
+            })
+        }
+        
+        function syncTime()
+        {
+            return new Promise(resolve=>{
+                request(`/time/set?time=${Date.now()}`).then(res => {
+                    resolve(JSON.parse(res))
+                });
+            })
+        }
+        function getDirectoryList(path)
+        {
+            return new Promise(resolve=>{
+                request(`/${path}`).then(res => {
+                    resolve(JSON.parse(res))
+                });
+            })
+        }
     </script>
 
 </body>
