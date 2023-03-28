@@ -92,6 +92,10 @@ void wifi_task() // void *arg
                         {
                             server.streamFile(f,"text/html");
                         }
+                        else if(uri.endsWith("css"))
+                        {
+                            server.streamFile(f,"text/css");
+                        }
                         else if(uri.endsWith("json"))
                         {
                             server.streamFile(f,"application/json");
