@@ -32,7 +32,7 @@
 static const char *TAG = "to_jpg";
 #endif
 
-static IRAM_ATTR void convert_line_format(uint8_t *src, pixformat_t format, uint8_t *dst, size_t width, size_t in_channels, size_t line)
+IRAM_ATTR void convert_line_format(uint8_t *src, pixformat_t format, uint8_t *dst, size_t width, size_t in_channels, size_t line)
 {
     sensor_t *s = esp_camera_sensor_get();
     uint16_t w = resolution[s->status.framesize].width>>s->status.binning;
