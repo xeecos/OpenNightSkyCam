@@ -106,7 +106,7 @@ void IRAM_ATTR capture_task(void *arg)
             task_set_status(TASK_PROCESSING);
             uint16_t w = resolution[s->status.framesize].width;
             uint16_t h = resolution[s->status.framesize].height;
-            
+
             if (previewing)
             {
                 LOG_UART("JPEG Encode:%d\n", esp_camera_sensor_get()->status.quality);
@@ -117,11 +117,25 @@ void IRAM_ATTR capture_task(void *arg)
                 info.height = h;
                 info.src_type = JPEG_RAW_TYPE_GRAY;
                 info.quality = esp_camera_sensor_get()->status.quality;
-                
-                void *el = jpeg_enc_open(&info);
-                jpeg_enc_process(el, output->buf, output->len, out_jpg_buf, 1024 * 800, &out_jpg_buf_len);
-                jpeg_enc_close(el);
-                
+                if (info.src_type == JPEG_RAW_TYPE_GRAY)
+                {
+                    void *el = jpeg_enc_open(&info);
+                    jpeg_enc_process(el, output->buf, output->len, out_jpg_buf, 1024 * 800, &out_jpg_buf_len);
+                    jpeg_enc_close(el);
+                }
+                else if (info.src_type == JPEG_RAW_TYPE_RGB888)
+                {
+                    uint8_t *rgb = (uint8_t *)ps_malloc(w * h * 3);
+                    for (int line = 0; line < h; line++)
+                    {
+                        convert_line_format(output->buf, PIXFORMAT_RAW, rgb, w, 3, line);
+                    }
+                    void *el = jpeg_enc_open(&info);
+                    jpeg_enc_process(el, rgb, w * h * 3, out_jpg_buf, 1024 * 800, &out_jpg_buf_len);
+                    jpeg_enc_close(el);
+                    free(rgb);
+                }
+
                 LOG_UART("Finish JPEG Encode:%d size:%d %d\n", millis() - t, out_jpg_buf_len, output->len);
                 __image_ready = true;
             }
@@ -189,23 +203,23 @@ void capture_run()
             if ((capture_mode == TASK_STARTRAILS && task_get_rest() == 0) || capture_mode != TASK_STARTRAILS)
             {
 #ifdef USE_BMP
-                    LOG_UART("bmp start\n");
-                    long t = millis();
-                    task_append_data(out_bmp_buf, out_bmp_buf_len);
-                    tf_write_file(output->buf, output->len);
-                    task_append_end();
+                LOG_UART("bmp start\n");
+                long t = millis();
+                task_append_data(out_bmp_buf, out_bmp_buf_len);
+                tf_write_file(output->buf, output->len);
+                task_append_end();
 
-                    capture_calc_exposure(output->buf, output->width, output->height);
+                capture_calc_exposure(output->buf, output->width, output->height);
 
-                    LOG_UART("bmp written: %d\n", millis() - t);
+                LOG_UART("bmp written: %d\n", millis() - t);
 #else
-                    task_append_data(out_jpg_buf, out_jpg_buf_len);
-                    task_append_end();
+                task_append_data(out_jpg_buf, out_jpg_buf_len);
+                task_append_end();
 #endif
-                    if (!task_status())
-                    {
-                        service_turn_on();
-                    }
+                if (!task_status())
+                {
+                    service_turn_on();
+                }
             }
 #endif
         }
@@ -236,8 +250,8 @@ void capture_calc_exposure(unsigned char *buf, int w, int h)
     _exposure_offset = 0;
     int wall_half = 500;
     int hall_half = 300;
-    int wall = (w-wall_half*2) / 5;
-    int hall = (h-hall_half*2) / 5;
+    int wall = (w - wall_half * 2) / 5;
+    int hall = (h - hall_half * 2) / 5;
     for (int y = 0; y < 5; y++)
     {
         for (int x = 0; x < 5; x++)
