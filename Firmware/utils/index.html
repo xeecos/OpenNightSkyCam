@@ -137,6 +137,60 @@
             -webkit-transform: translateY(-50%) translateX(-50%);
             transform: translateY(-50%) translateX(-50%);
         }
+
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        /* Hide default HTML checkbox */
+        .switch .swinput {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider */
+        .swslider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .swslider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .swslider {
+            background-color: #2196F3;
+        }
+
+        input:focus + .swslider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .swslider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
     </style>
     <script src="jquery.min.js"></script>
     <script src="lang.js"></script>
@@ -148,6 +202,7 @@
             data-sw-translate>Preview</button>
         <button class="tablinks" onclick="openPage(event, 'Timelapse')" data-sw-translate>Timelapse</button>
         <button class="tablinks" onclick="openPage(event, 'Browser')" data-sw-translate>Browser</button>
+        <button class="tablinks" onclick="openPage(event, 'Setting')" data-sw-translate>Setting</button>
     </div>
     <div id="appLoading" style="display: none">
         <span style="width:100%;text-align:center;">加载中，请稍候...</span>
@@ -156,19 +211,19 @@
         <img class="preview-img" id="preview-img" src="latest.jpg" />
         <p>
         <div>
-            <div><span data-sw-translate>Exposure:</span><input type="number" id="exp-input" value="1"
+            <div><span data-sw-translate>Exposure:</span><input type="number" id="exp-input" autoFocus value="1"
                     style="position:absolute;right:42px;width:80px;text-align: center;border-top: 0px;border-left: 0px;border-right: 0px;"></input><span
                     data-sw-translate style="position:absolute;right:6px;">Sec</span></div>
             <div><input type="range" min="1" max="100" value="1" class="slider" id="exp-range"></div>
-            <div><span data-sw-translate>R Gain:</span><input type="number" id="r-gain-input" value="1"
+            <div><span data-sw-translate>R Gain:</span><input type="number" autoFocus id="r-gain-input" value="1"
                     style="position:absolute;right:42px;width:80px;text-align: center;border-top: 0px;border-left: 0px;border-right: 0px;"></input><span
                     data-sw-translate style="position:absolute;right:6px;">%</span></div>
             <div><input type="range" min="1" max="100" value="1" class="slider" id="r-gain-range"></div>
-            <div><span data-sw-translate>G Gain:</span><input type="number" id="g-gain-input" value="1"
+            <div><span data-sw-translate>G Gain:</span><input type="number" autoFocus id="g-gain-input" value="1"
                     style="position:absolute;right:42px;width:80px;text-align: center;border-top: 0px;border-left: 0px;border-right: 0px;"></input><span
                     data-sw-translate style="position:absolute;right:6px;">%</span></div>
             <div><input type="range" min="1" max="100" value="1" class="slider" id="g-gain-range"></div>
-            <div><span data-sw-translate>B Gain:</span><input type="number" id="b-gain-input" value="1"
+            <div><span data-sw-translate>B Gain:</span><input type="number" autoFocus id="b-gain-input" value="1"
                     style="position:absolute;right:42px;width:80px;text-align: center;border-top: 0px;border-left: 0px;border-right: 0px;"></input><span
                     data-sw-translate style="position:absolute;right:6px;">%</span></div>
             <div><input type="range" min="1" max="100" value="1" class="slider" id="b-gain-range"></div>
@@ -207,6 +262,14 @@
             <span>SD > </span><span>images/</span><span>202304/</span>
         </p>
     </div>
+    <div id="Setting" class="tabcontent">
+        <div style="position:relative;height:100px;">
+            <span style="line-height:24px;vertical-align: middle;" data-sw-translate>UDisk-Mode:</span><label style="position:absolute;right:0px;" class="switch">
+                <input type="checkbox" id="check-udisk">
+                <span class="swslider"></span>
+            </label>
+        </div>
+    </div>
     <script>
         document.getElementById("defaultOpen").click();
         document.getElementById("exp-input").value = document.getElementById("exp-range").value = localStorage.getItem("exposure", 1);
@@ -217,7 +280,8 @@
         document.getElementById("frames-input").value = document.getElementById("frames-range").value = localStorage.getItem("frames", 1);
         document.getElementById("progress-input").value = " 0 / "+document.getElementById("frames-input").value;
         document.getElementById("video-length-input").value = (document.getElementById("frames-input").value/30).toFixed(0);
-        document.getElementById("exp-input").oninput = document.getElementById("exp-range").oninput = function () {
+        document.getElementById("exp-input").oninput = document.getElementById("exp-range").oninput = function (e) {
+            // document.getElementById("exp-input").blur();s
             document.getElementById("exp-input").value = this.value;
             document.getElementById("exp-range").value = this.value;
             localStorage.setItem("exposure", this.value);
@@ -250,6 +314,21 @@
             
             document.getElementById("progress-input").value = " 0 / "+document.getElementById("frames-input").value;
             document.getElementById("video-length-input").value = (document.getElementById("frames-input").value/30).toFixed(0);
+        }
+        document.getElementById("check-udisk").checked = localStorage.getItem("udisk", false);
+        document.getElementById("check-udisk").oninput = function()
+        {
+            if(this.checked)
+            {
+                request(`/storage/set?mode=udisk`).then(res => {
+                });
+            }
+            else{
+                request(`/storage/set?mode=camera`).then(res => {
+                });
+            }
+            
+            localStorage.setItem("udisk", this.value);
         }
         function openPage(evt, pageName) {
             let i, tabcontent, tablinks;
@@ -284,7 +363,6 @@
                 let obj = JSON.parse(res);
                 setTimeout(() => {
                     document.getElementById('appLoading').style.display = 'none'
-                    onReload();
                 }, obj.time * 1.0 + waitTime);
             });
         }
@@ -294,9 +372,9 @@
         function onExposure() {
             return new Promise(resolve=>{
                 let exp = document.getElementById('exp-input').value * 1000;
-                let r_gain = document.getElementById('r-gain-input').value * 1000;
-                let g_gain = document.getElementById('g-gain-input').value * 1000;
-                let b_gain = document.getElementById('b-gain-input').value * 1000;
+                let r_gain = document.getElementById('r-gain-input').value;
+                let g_gain = document.getElementById('g-gain-input').value;
+                let b_gain = document.getElementById('b-gain-input').value;
                 request(`/capture/set?coarse=${exp}&fine=${1}&r_gain=${r_gain}&gr_gain=${g_gain}&gb_gain=${g_gain}&b_gain=${b_gain}`).then(res => {
                     resolve(JSON.parse(res))
                 });
