@@ -3,8 +3,8 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>EzCam</title>
-    <link type="text/css" rel="stylesheet" href="style.css"/>
+    <title>Night Sky</title>
+    <link rel="stylesheet" href="style.css"/>
     <script src="jquery.min.js"></script>
     <script src="lang.js"></script>
 </head>
@@ -21,7 +21,7 @@
         <span style="width:100%;text-align:center;">加载中，请稍候...</span>
     </div>
     <div id="Preview" class="tabcontent">
-        <img class="preview-img" id="preview-img" src="latest.jpg" />
+        <img class="preview-img" id="preview-img" src="/preview/latest.jpg" />
         <p>
         <div>
             <div><span data-sw-translate>Exposure:</span><input type="number" id="exp-input" autoFocus value="1"
@@ -50,7 +50,7 @@
     </div>
 
     <div id="Timelapse" class="tabcontent">
-        <img class="preview-img" id="preview-img" src="latest.jpg" />
+        <img class="preview-img" id="preview-img" src="/preview/latest.jpg" />
         <p>
         <div style="position:relative;margin-bottom:20px;width:100%">
             <span data-sw-translate>Progress: </span> <input style="width:100px;border:0px;text-align: left;" id="progress-input"/>
@@ -83,8 +83,8 @@
             </label>
         </div>
         <div style="position:relative;height:100px;">
-            <label for="lang-select">Language:</label>
-            <select name="langs" id="lang-select">
+            <label for="lang-select" data-sw-translate>Language:</label>
+            <select style="position:absolute;right:0px;" name="langs" id="lang-select">
                 <option value="en">English</option>
                 <option value="zh_CN">中文</option>
             </select>

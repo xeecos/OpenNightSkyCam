@@ -42,9 +42,17 @@ document.getElementById("frames-input").oninput = document.getElementById("frame
     document.getElementById("progress-input").value = " 0 / " + document.getElementById("frames-input").value;
     document.getElementById("video-length-input").value = (document.getElementById("frames-input").value / 30).toFixed(0);
 }
+$(function () {
+    window.Translator.translate(localStorage.getItem("lang"));
+});
 document.getElementById("lang-select").oninput = function()
 {
-    console.log(this.value)
+    window.Translator.translate(this.value);
+    
+    $(function () {
+        window.Translator.translate(this.value);
+    });
+    localStorage.setItem("lang", this.value);
 }
 
 document.getElementById("check-udisk").checked = localStorage.getItem("udisk", false);
@@ -95,7 +103,6 @@ async function onShot() {
         let obj = JSON.parse(res);
         setTimeout(() => {
             document.getElementById('appLoading').style.display = 'none'
-            onReload();
         }, obj.time * 1.0 + waitTime);
     });
 }

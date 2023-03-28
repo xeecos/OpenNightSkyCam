@@ -4,6 +4,10 @@ window.Translator = {
     _words: [],
 
     translate: function (group) {
+        if(!group)
+        {
+            group = "en";
+        }
         var $this = this;
         $('[data-sw-translate]').each(function () {
             $(this).html($this._tryTranslate(group, $(this).html()));
@@ -32,6 +36,7 @@ window.Translator.learn(
             "Browser": "Browser",
             "Setting": "Setting",
             "UDisk-Mode:": "UDisk Mode:",
+            "Language:": "Language:",
             "Shot": "Shot",
             "Reload": "Reload",
             "Exposure:": "Exposure:",
@@ -53,6 +58,7 @@ window.Translator.learn(
             "Browser": "浏览",
             "Setting": "设置",
             "UDisk-Mode:": "U盘模式:",
+            "Language:": "语言:",
             "Shot": "拍摄",
             "Reload": "显示最新照片",
             "Exposure:": "曝光时间:",
@@ -69,7 +75,3 @@ window.Translator.learn(
         }
     });
 
-
-$(function () {
-    window.Translator.translate("en");
-});
