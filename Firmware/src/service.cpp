@@ -1,6 +1,7 @@
 #include "service.h"
 #include "driver/temp_sensor.h"
 #include <WiFi.h>
+#include <SPIFFS.h>
 #include "capture.h"
 #include "config.h"
 #include "global.h"
@@ -352,6 +353,11 @@ void wifi_task() // void *arg
     server.enableCrossOrigin(true);
     server.enableCORS(true);
     server.enableDelay(true);
+    if(!SPIFFS.begin(true)){
+        Serial.println("An Error has occurred while mounting SPIFFS");
+        return;
+    }
+    server.serveStatic("/", SPIFFS, "/");
     server.begin();
 }
 static bool wifi_on = true;

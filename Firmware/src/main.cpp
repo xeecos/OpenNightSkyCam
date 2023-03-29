@@ -11,7 +11,7 @@ void setup()
 {
     LOG_INIT(921600);
     USBSerial.setDebugOutput(false);
-    tf_mount();
+    tf_unmount();
     global_init();
     #ifdef BT_ENABLED
     ble_init();
