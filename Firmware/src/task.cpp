@@ -179,7 +179,7 @@ void task_capture()
         // ar0130_set_bin(resolution);
     }
     int coarse = _tasks_ring[_tasks_ring_pop].coarse;
-    if(coarse>10)
+    if(coarse>0)
     {
         s->set_aec_exposure(s, coarse, 1);
     }
