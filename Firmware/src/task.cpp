@@ -263,7 +263,7 @@ void IRAM_ATTR task_append_data(uint8_t *buf, unsigned long len)
         // }
         char *image_store_url = (char *)malloc(255);
         memset(image_store_url,0,255);
-        sprintf(image_store_url, "/images/%s/P0%s.jpg\0", task_get_name(), task_get_timestamp());
+        sprintf(image_store_url, "/images/%s/P%05d.jpg\0", task_get_name(), task_get_index());//task_get_timestamp());
         tf_begin_write((const char*)image_store_url);
         tf_write_file(buf, len);
         free(image_store_url);
