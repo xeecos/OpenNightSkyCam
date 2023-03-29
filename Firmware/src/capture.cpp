@@ -127,14 +127,17 @@ void IRAM_ATTR capture_task(void *arg)
                 else if (info.src_type == JPEG_RAW_TYPE_RGB888)
                 {
                     uint8_t *rgb = (uint8_t *)ps_malloc(w * h * 3);
-                    for (int line = 0; line < h; line++)
+                    if(rgb)
                     {
-                        convert_line_format(output->buf, PIXFORMAT_RAW, rgb + line * w * 3, w, 3, line);
+                        for (int line = 0; line < h; line++)
+                        {
+                            convert_line_format(output->buf, PIXFORMAT_RAW, rgb + line * w * 3, w, 3, line);
+                        }
+                        void *el = jpeg_enc_open(&info);
+                        jpeg_enc_process(el, rgb, w * h * 3, out_jpg_buf, 1024 * 800, &out_jpg_buf_len);
+                        jpeg_enc_close(el);
+                        free(rgb);
                     }
-                    void *el = jpeg_enc_open(&info);
-                    jpeg_enc_process(el, rgb, w * h * 3, out_jpg_buf, 1024 * 800, &out_jpg_buf_len);
-                    jpeg_enc_close(el);
-                    free(rgb);
                 }
 
                 LOG_UART("Finish JPEG Encode:%d size:%d\n", millis() - t, out_jpg_buf_len);
