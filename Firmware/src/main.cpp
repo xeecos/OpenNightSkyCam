@@ -13,7 +13,9 @@ void setup()
     USBSerial.setDebugOutput(false);
     tf_mount();
     global_init();
+    #ifdef BT_ENABLED
     ble_init();
+    #endif
     service_init();
     capture_init();
     task_init();
@@ -21,7 +23,9 @@ void setup()
 void loop()
 {
     global_run();
+    #ifdef BT_ENABLED
     ble_run();
+    #endif
     service_run();
     task_run();
     capture_run();
