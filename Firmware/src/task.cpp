@@ -156,7 +156,8 @@ char *task_get_timestamp()
 }
 int task_get_index()
 {
-    return _tasks_ring[_tasks_ring_pop].total - _tasks_ring[_tasks_ring_pop].count;
+    int idx = _tasks_ring[_tasks_ring_pop].total - _tasks_ring[_tasks_ring_pop].count;
+    return idx==0?_tasks_ring[_tasks_ring_pop].total:idx;
 }
 int task_get_total()
 {
