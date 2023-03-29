@@ -247,10 +247,6 @@ void task_stop()
     // }
     
     _task_running = false;
-    _tasks_ring[_tasks_ring_pop].total = 0;
-    _tasks_ring[_tasks_ring_pop].count = 0;
-    _tasks_ring_pop = 0;
-    _tasks_ring_push = 0;
 }
 // static char *image_store_url = NULL;
 void IRAM_ATTR task_append_data(uint8_t *buf, unsigned long len)
