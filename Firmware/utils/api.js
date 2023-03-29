@@ -44,6 +44,7 @@ document.getElementById("frames-input").oninput = document.getElementById("frame
 }
 $(function () {
     window.Translator.translate(localStorage.getItem("lang"));
+    document.getElementById("lang-select").value = localStorage.getItem("lang")||"english";
 });
 document.getElementById("lang-select").oninput = function()
 {
@@ -55,7 +56,7 @@ document.getElementById("lang-select").oninput = function()
     localStorage.setItem("lang", this.value);
 }
 
-document.getElementById("check-udisk").checked = localStorage.getItem("udisk", false);
+document.getElementById("check-udisk").checked = localStorage.getItem("udisk")||false;
 document.getElementById("check-udisk").oninput = function()
 {
     if(this.checked)
