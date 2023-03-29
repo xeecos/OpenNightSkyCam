@@ -30,6 +30,7 @@ window.Translator = {
 window.Translator.learn(
     {
         "en": {
+            "loading...":"loading...",
             "Preview": "Preview",
             "Task": "Task",
             "Timelapse": "Timelapse",
@@ -49,9 +50,11 @@ window.Translator.learn(
             "Frames:": "Frames:",
             "Video Length:": "Video Length:",
             "Start Task": "Start Task",
-            "Stop Task": "Stop Task"
+            "Stop Task": "Stop Task",
+            "Update Status": "Update Status"
         },
         "zh_CN": {
+            "loading...":"加载中...",
             "Preview": "预览",
             "Task": "任务",
             "Timelapse": "延时摄影",
@@ -71,7 +74,8 @@ window.Translator.learn(
             "Frames:": "帧数:",
             "Video Length:": "视频长度:",
             "Start Task": "开始任务",
-            "Stop Task": "结束任务"
+            "Stop Task": "结束任务",
+            "Update Status": "更新状态"
         }
     });
 

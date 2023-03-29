@@ -126,12 +126,16 @@ function onAddTask() {
         let r_gain = document.getElementById('r-gain-input').value;
         let g_gain = document.getElementById('g-gain-input').value;
         let b_gain = document.getElementById('b-gain-input').value;
-        request(`/task/add?coarse=${exp}&fine=${1}&r_gain=${r_gain}&gr_gain=${g_gain}&gb_gain=${g_gain}&b_gain=${b_gain}`).then(res => {
+        let interval = document.getElementById("interval-input").value;
+        let frames = document.getElementById("frames-input").value;
+        request(`/task/add?delay=100&interval=${interval}&frames=${frames}&mode=3&resolution=0&coarse=${exp}&fine=${1}&r_gain=${r_gain}&gr_gain=${g_gain}&gb_gain=${g_gain}&b_gain=${b_gain}`).then(res => {
             resolve(JSON.parse(res))
         });
     })
 }
-function onStartTask() {
+async function onStartTask() {
+    await syncTime();
+    await onAddTask();
     return new Promise(resolve => {
         request(`/task/start`).then(res => {
             resolve(JSON.parse(res))
@@ -145,17 +149,24 @@ function onStopTask() {
         });
     })
 }
+getTaskStatus();
 function getTaskStatus() {
     return new Promise(resolve => {
         request(`/task/status`).then(res => {
-            resolve(JSON.parse(res))
+            let obj = JSON.parse(res);
+            if(obj&&obj.total)
+            {
+                document.getElementById("progress-input").value = ` ${obj.current} / ${obj.total}`;
+            }
+            resolve();
         });
     })
 }
 
 function syncTime() {
+    let now = new Date();
     return new Promise(resolve => {
-        request(`/time/set?time=${Date.now()}`).then(res => {
+        request(`/time/set?time=${(now.getTime()/1000-now.getTimezoneOffset()*60)>>0}`).then(res => {
             resolve(JSON.parse(res))
         });
     })

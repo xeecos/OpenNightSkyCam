@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Night Sky</title>
+    <title>Night Sky Cam</title>
     <link rel="stylesheet" href="style.css"/>
     <script src="jquery.min.js"></script>
     <script src="lang.js"></script>
@@ -14,11 +14,11 @@
         <button id="defaultOpen" class="tablinks" onclick="openPage(event, 'Preview')"
             data-sw-translate>Preview</button>
         <button class="tablinks" onclick="openPage(event, 'Timelapse')" data-sw-translate>Timelapse</button>
-        <button class="tablinks" onclick="openPage(event, 'Browser')" data-sw-translate>Browser</button>
+        <!-- <button class="tablinks" onclick="openPage(event, 'Browser')" data-sw-translate>Browser</button> -->
         <button class="tablinks" onclick="openPage(event, 'Setting')" data-sw-translate>Setting</button>
     </div>
     <div id="appLoading" style="display: none">
-        <span style="width:100%;text-align:center;">加载中，请稍候...</span>
+        <span style="width:100%;text-align:center;" data-sw-translate>loading...</span>
     </div>
     <div id="Preview" class="tabcontent">
         <img class="preview-img" id="preview-img" src="/preview/latest.jpg" />
@@ -66,7 +66,11 @@
                     data-sw-translate style="position:absolute;right:6px;"></span></div>
             <div><input type="range" min="1" max="10000" value="1" class="slider" id="frames-range"></div>
         </div>
-        <button style="width:100%;height:40px;margin-top:10px;" onclick="onTask()" data-sw-translate>Start Task</button>
+        
+        <div style="margin-top:10px;">
+            <button style="width:calc( 50% - 6px );height:40px;margin-top:10px;margin-right:6px;" onclick="onStartTask()" data-sw-translate>Start Task</button>
+            <button style="width:calc( 50% - 6px );height:40px;margin-top:10px;" onclick="getTaskStatus()" data-sw-translate>Update Status</button>
+        </div>
         </p>
     </div>
 
