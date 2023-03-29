@@ -4,6 +4,7 @@ document.getElementById("exp-input").value = document.getElementById("exp-range"
 document.getElementById("r-gain-input").value = document.getElementById("r-gain-range").value = localStorage.getItem("r-gain")||1;
 document.getElementById("g-gain-input").value = document.getElementById("g-gain-range").value = localStorage.getItem("g-gain")||1;
 document.getElementById("b-gain-input").value = document.getElementById("b-gain-range").value = localStorage.getItem("b-gain")||1;
+document.getElementById("global-gain-input").value = document.getElementById("global-gain-range").value = localStorage.getItem("global-gain")||1;
 document.getElementById("interval-input").value = document.getElementById("interval-range").value = localStorage.getItem("interval")||1;
 document.getElementById("frames-input").value = document.getElementById("frames-range").value = localStorage.getItem("frames")||1;
 document.getElementById("progress-input").value = " 0 / " + document.getElementById("frames-input").value;
@@ -27,6 +28,11 @@ document.getElementById("b-gain-input").oninput = document.getElementById("b-gai
     document.getElementById("b-gain-input").value = this.value;
     document.getElementById("b-gain-range").value = this.value;
     localStorage.setItem("b-gain", this.value);
+}
+document.getElementById("global-gain-input").oninput = document.getElementById("global-gain-range").oninput = function () {
+    document.getElementById("global-gain-input").value = this.value;
+    document.getElementById("global-gain-range").value = this.value;
+    localStorage.setItem("global-gain", this.value);
 }
 
 document.getElementById("interval-input").oninput = document.getElementById("interval-range").oninput = function () {
@@ -116,7 +122,8 @@ function onExposure() {
         let r_gain = document.getElementById('r-gain-input').value;
         let g_gain = document.getElementById('g-gain-input').value;
         let b_gain = document.getElementById('b-gain-input').value;
-        request(`/capture/set?coarse=${exp}&fine=${1}&r_gain=${r_gain}&gr_gain=${g_gain}&gb_gain=${g_gain}&b_gain=${b_gain}`).then(res => {
+        let gain = document.getElementById('global-gain-input').value;
+        request(`/capture/set?coarse=${exp}&fine=${1}&gain=${gain}&r_gain=${r_gain}&gr_gain=${g_gain}&gb_gain=${g_gain}&b_gain=${b_gain}`).then(res => {
             resolve(JSON.parse(res))
         });
     })

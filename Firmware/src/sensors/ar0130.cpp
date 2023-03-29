@@ -295,7 +295,7 @@ static int set_exposure_ctrl(sensor_t *sensor, int enable)
 	// }
 	// else
 	{
-		enable?SCCB_Write16_16(sensor->slv_addr,0x3064, 0b1100110000010):SCCB_Write16_16(sensor->slv_addr,0x3064, 0b1100000000010); // DISABLE EMB. DATA
+		SCCB_Write16_16(sensor->slv_addr,0x3064, enable?0b1100110000010:0b1100000000010); // DISABLE EMB. DATA
 		if (set_reg_bits(sensor, 0x3100, 0, 1, enable) >= 0)
 		{
 			sensor->status.aec = !!enable;
@@ -352,17 +352,17 @@ static int set_agc_gain(sensor_t *sensor, float gain)
 {
 	int ret = 0;
 	int gain_level = gain * 32;
-	int rb_gain = (uint8_t)(gain * 48) & 0xff;
-	SCCB_Write16_16(sensor->slv_addr, 0x3056, gain_level & 0xff);
-	delay(5);
-	SCCB_Write16_16(sensor->slv_addr, 0x3058, rb_gain);
-	delay(5);
-	SCCB_Write16_16(sensor->slv_addr, 0x305A, rb_gain);
-	delay(5);
-	SCCB_Write16_16(sensor->slv_addr, 0x305C, gain_level & 0xff);
-	delay(5);
+	// int rb_gain = (uint8_t)(gain * 48) & 0xff;
+	// SCCB_Write16_16(sensor->slv_addr, 0x3056, gain_level & 0xff);
+	// delay(5);
+	// SCCB_Write16_16(sensor->slv_addr, 0x3058, rb_gain);
+	// delay(5);
+	// SCCB_Write16_16(sensor->slv_addr, 0x305A, rb_gain);
+	// delay(5);
+	// SCCB_Write16_16(sensor->slv_addr, 0x305C, gain_level & 0xff);
+	// delay(5);
 
-	// SCCB_Write16_16(sensor->slv_addr, 0x305E, gain_level); // xxx.yyyyy (1x~8x)
+	SCCB_Write16_16(sensor->slv_addr, 0x305E, gain_level); // xxx.yyyyy (1x~8x)
 	sensor->status.agc_gain = gain_level;
 	// Writing a gain to this register is equivalent to writing that code to each of the 4 color-specific gain registers.
 	SCCB_Write16_16(sensor->slv_addr, 0x3EE4, 0xD208 | ((0b1 & (gain_level >> 10))) << 8);
@@ -380,8 +380,8 @@ static int set_agc_gain_custom(sensor_t *sensor, float gain_r, float gain_gr, fl
 	uint16_t b = (uint16_t)(gain_b*32);
 	uint16_t r = (uint16_t)(gain_r*32);
 	uint16_t gb = (uint16_t)(gain_gb*32);
-	SCCB_Write16_16(sensor->slv_addr, 0x305E, gr);
-	delay(5);
+	// SCCB_Write16_16(sensor->slv_addr, 0x305E, gr);
+	// delay(5);
 	SCCB_Write16_16(sensor->slv_addr, 0x3056, gr);
 	delay(5);
 	SCCB_Write16_16(sensor->slv_addr, 0x3058, b);
