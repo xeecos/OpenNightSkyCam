@@ -470,6 +470,7 @@ static int take_photo(sensor_t *sensor, bool preview, fileformat_t format)
 		// delay(100);
 	}
 	#ifdef EXPOSURE
+	digitalWrite(LED_IO, HIGH);
 	while (digitalRead(VSYNC));
 	digitalWrite(EXPOSURE, HIGH);
 	#endif
@@ -480,6 +481,7 @@ static int take_photo_end(sensor_t *sensor)
 {
 	#ifdef EXPOSURE
 	digitalWrite(EXPOSURE, LOW);
+	digitalWrite(LED_IO, LOW);
 	#endif
 	return 0;
 }
