@@ -166,6 +166,10 @@ function getTaskStatus() {
             {
                 document.getElementById("progress-input").value = ` ${obj.current} / ${obj.total}`;
             }
+            else
+            {
+                document.getElementById("progress-input").value = " 0 / " + document.getElementById("frames-input").value;
+            }
             resolve();
         });
     })
