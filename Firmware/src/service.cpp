@@ -354,8 +354,7 @@ void wifi_task() // void *arg
     server.enableCORS(true);
     server.enableDelay(true);
     if(!SPIFFS.begin(true)){
-        Serial.println("An Error has occurred while mounting SPIFFS");
-        return;
+        // return;
     }
     server.serveStatic("/", SPIFFS, "/");
     server.begin();
