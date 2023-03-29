@@ -114,6 +114,7 @@ void task_add(int delay, int interval, int count, RECORD_MODE mode, int coarse, 
     _tasks_ring[idx].b_gain = b_gain;
     _tasks_ring[idx].resolution = resolution;
     _tasks_ring_push++;
+    
 }
 char _task_name[64];
 char _task_time[64];
@@ -174,11 +175,11 @@ void task_capture()
         int fine = _tasks_ring[_tasks_ring_pop].fine;
         int resolution = _tasks_ring[_tasks_ring_pop].resolution;
         
-        // s->set_agc_gain_custom(s, r_gain, gr_gain, gb_gain, b_gain);
+        s->set_agc_gain_custom(s, r_gain, gr_gain, gb_gain, b_gain);
         // ar0130_set_bin(resolution);
     }
     int coarse = _tasks_ring[_tasks_ring_pop].coarse;
-    if(coarse>1000)
+    if(coarse>10)
     {
         s->set_aec_exposure(s, coarse, 1);
     }
@@ -262,7 +263,7 @@ void IRAM_ATTR task_append_data(uint8_t *buf, unsigned long len)
         // }
         char *image_store_url = (char *)malloc(255);
         memset(image_store_url,0,255);
-        sprintf(image_store_url, "/images/%s/P0%s.bmp\0", task_get_name(), task_get_timestamp());
+        sprintf(image_store_url, "/images/%s/P0%s.jpg\0", task_get_name(), task_get_timestamp());
         tf_begin_write((const char*)image_store_url);
         tf_write_file(buf, len);
         free(image_store_url);

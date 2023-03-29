@@ -465,13 +465,12 @@ static int take_photo(sensor_t *sensor, bool preview, fileformat_t format)
 	// delay(5);
 	if(preview)
 	{
-		delay(20);
+		// delay(20);
 		service_turn_off();
-		delay(100);
+		// delay(100);
 	}
 	#ifdef EXPOSURE
-	while (digitalRead(VSYNC))
-		;
+	while (digitalRead(VSYNC));
 	digitalWrite(EXPOSURE, HIGH);
 	#endif
 	capture_start(preview, format);

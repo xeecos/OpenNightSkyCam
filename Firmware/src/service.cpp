@@ -146,7 +146,7 @@ void wifi_task() // void *arg
 
     server.on("/task/add", [=]()
     { 
-        //http://192.168.31.194/task/add?delay=1000&during=3000&count=10&mode=3&exposure=1.0&gain=0&resolution=0
+        //http://192.168.31.194/task/add?delay=1000&interval=3000&frames=10&mode=3&exposure=1.0&gain=0&resolution=0
         task_add(server.arg("delay").toInt(), server.arg("interval").toInt(), server.arg("frames").toInt(), (RECORD_MODE)server.arg("mode").toInt(),server.arg("coarse").toInt(),server.arg("fine").toInt(),server.arg("r_gain").toFloat(),server.arg("gr_gain").toFloat(),server.arg("gb_gain").toFloat(),server.arg("b_gain").toFloat(),server.arg("resolution").toInt());
         server.send(200, "text/json", "{\"err\":0}"); 
     });
@@ -359,7 +359,7 @@ void service_turn_off()
 {
     if (wifi_on)
     {
-        LOG_UART("wifi off\n");
+        // LOG_UART("wifi off\n");
         wifi_on = false;
         // esp_wifi_disconnect();
         // esp_wifi_set_ps(WIFI_PS_MAX_MODEM);
@@ -369,7 +369,7 @@ void service_turn_on()
 {
     if (!wifi_on)
     {
-        LOG_UART("wifi on\n");
+        // LOG_UART("wifi on\n");
         wifi_on = true;
         // esp_wifi_connect();
         // esp_wifi_set_ps(WIFI_PS_MIN_MODEM);

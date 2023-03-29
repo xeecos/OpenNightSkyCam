@@ -14,6 +14,8 @@
 #include "config.h"
 #include "esp_jpeg_enc.h"
 
+// #define USE_BMP
+
 static camera_config_t camera_config = {
     .pin_pwdn = PWDN,
     .pin_xclk = XCLK,
@@ -49,7 +51,6 @@ bool capture_started = false;
 bool previewing = false;
 bool __ready = false;
 bool __image_ready = false;
-#define USE_BMP
 double _exposure_offset = 0;
 uint8_t *out_bmp_buf;
 size_t out_bmp_buf_len;
@@ -88,7 +89,7 @@ void IRAM_ATTR capture_task(void *arg)
     // #endif
     output = (camera_fb_t *)calloc(sizeof(camera_fb_t), 1);
     output->buf = (uint8_t *)heap_caps_malloc(resolution[s->status.framesize].width * resolution[s->status.framesize].height, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
-    fmt2bmp(resolution[s->status.framesize].width, resolution[s->status.framesize].height, &out_bmp_buf, &out_bmp_buf_len);
+    // fmt2bmp(resolution[s->status.framesize].width, resolution[s->status.framesize].height, &out_bmp_buf, &out_bmp_buf_len);
     while (1)
     {
         if (isCapturing)
@@ -107,7 +108,7 @@ void IRAM_ATTR capture_task(void *arg)
             uint16_t w = resolution[s->status.framesize].width;
             uint16_t h = resolution[s->status.framesize].height;
 
-            if (previewing)
+            // if (previewing)
             {
                 LOG_UART("JPEG Encode:%d\n", esp_camera_sensor_get()->status.quality);
                 long t = millis();
@@ -138,9 +139,6 @@ void IRAM_ATTR capture_task(void *arg)
 
                 LOG_UART("Finish JPEG Encode:%d size:%d\n", millis() - t, out_jpg_buf_len);
                 __image_ready = true;
-            }
-            else
-            {
             }
             __ready = true;
         }
