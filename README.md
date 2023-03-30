@@ -1,5 +1,6 @@
 # Open Night Sky Cam
 ## Features
+* Based On ESP32-S3-Wroom-1 Module with 8MB Flash and 8MB PSRAM
 * Long Exposure Time
 * TF card supported by SDMMC 
 * U-Disk Mode, USB 2.0 HighSpeed Write and Read Files
