@@ -29,7 +29,7 @@
 
 ## How To Use
 * plug in USB cable to the cam.
-* connect Night-Sky ssid by your mobile phone
+* connect "Night-Sky" ssid without password by WiFi
 * open http://192.168.43.1/index.html on your browser
 * close the U-DISK mode on Setting tab
 * then preview it 
