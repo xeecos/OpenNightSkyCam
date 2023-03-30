@@ -19,6 +19,17 @@
 ![shell](assets/shell.jpg "shell")
 
 ## Firmware
+* install VSCode and Platformio
+* download and open the firmware source code by VSCode
+* copy the "esp32-s3-wroom-1.json" to ~/.platformio/platforms/espressif32/boards
+* compile the code
+* build and upload the filesystem image for web
 
+![compile](assets/compile.jpg "compile")
 
 ## How To Use
+* plug in USB cable to the cam.
+* connect Night-Sky ssid by your mobile phone
+* open http://192.168.43.1/index.html on your browser
+* close the U-DISK mode on Setting tab
+* then preview it 
