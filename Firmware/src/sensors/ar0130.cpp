@@ -53,6 +53,8 @@ uint16_t ar0130_default_regs[120][2] = {
 								  // // fPIXCLK= (16*32)/(4*8*4)
 	{0x3070, 0x0000},			  // test pattern
 	{0x306E, 0},
+	{0x311C, 0xFFFF},			  // AE_MAX_EXPOSURE_REG
+	{0x311E, 0x0001},			  // AE_MIN_EXPOSURE_REG
 	{0x3EDA, 0x0F03}, // DAC_LD_14_15
 	{0x3ED8, 0x01EF}, // DAC_LD_12_13
 	{0, 0}};
@@ -181,9 +183,6 @@ static int reset(sensor_t *sensor)
 	// 	vTaskDelay(10 / portTICK_PERIOD_MS);
 	// SCCB_Write16_16(sensor->slv_addr,0x3126, 0x0080); // AE_ALPHA_V1_REG
 	// 	vTaskDelay(10 / portTICK_PERIOD_MS);
-	SCCB_Write16_16(sensor->slv_addr,0x311C, 0x7FFF); // AE_MAX_EXPOSURE_REG
-		vTaskDelay(10 / portTICK_PERIOD_MS);
-	SCCB_Write16_16(sensor->slv_addr,0x311E, 0x0001); // AE_MIN_EXPOSURE_REG
 	return 0;
 }
 
