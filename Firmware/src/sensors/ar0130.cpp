@@ -285,16 +285,10 @@ static int set_gain_ctrl(sensor_t *sensor, int enable)
 
 static int set_exposure_ctrl(sensor_t *sensor, int enable)
 {
-	// set_reg_bits(sensor, 0x301A, 2, 1, enable);
-	// if(enable)
-	// {
-	// 	set_reg_bits(sensor, 0x3100, 0, 1, enable);          // AE_CTRL_REG
-	// 	// SCCB_Write16_16(sensor->slv_addr,0x3014, 100);
-		LOG_UART("set aec:%d\n",enable);
-	// }
-	// else
+	LOG_UART("set aec:%d\n",enable);
 	{
 		SCCB_Write16_16(sensor->slv_addr,0x3064, enable?0b1100110000010:0b1100000000010); // DISABLE EMB. DATA
+		delay(5);
 		if (set_reg_bits(sensor, 0x3100, 0, 1, enable) >= 0)
 		{
 			sensor->status.aec = !!enable;
@@ -340,6 +334,16 @@ static int set_aec_exposure(sensor_t *sensor, uint16_t coarse_value, uint16_t fi
 {
 	LOG_UART("exp:%d\n",coarse_value);
 	int ret = 0;
+	if(coarse_value==0)
+	{
+	    set_exposure_ctrl(sensor, 1);
+		return ret;
+	}
+	else 
+	{
+	    set_exposure_ctrl(sensor, 0);
+		delay(5);
+	}
 	SCCB_Write16_16(sensor->slv_addr, 0x3012, coarse_value);
 	delay(5);
 	SCCB_Write16_16(sensor->slv_addr, 0x3014, 1040 - fine_value);
