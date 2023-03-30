@@ -136,7 +136,7 @@ function onAddTask() {
         let b_gain = document.getElementById('b-gain-input').value;
         let interval = document.getElementById("interval-input").value;
         let frames = document.getElementById("frames-input").value;
-        request(`/task/add?delay=100&interval=${interval}&frames=${frames}&mode=3&resolution=0&coarse=${exp}&fine=${1}&r_gain=${r_gain}&gr_gain=${g_gain}&gb_gain=${g_gain}&b_gain=${b_gain}`).then(res => {
+        request(`/task/add?delay=100&during=${interval}&frames=${frames}&mode=3&resolution=0&coarse=${exp}&fine=${1}&r_gain=${r_gain}&gr_gain=${g_gain}&gb_gain=${g_gain}&b_gain=${b_gain}`).then(res => {
             resolve(JSON.parse(res))
         });
     })
