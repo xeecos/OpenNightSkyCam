@@ -173,65 +173,22 @@ void task_capture()
         float gr_gain = _tasks_ring[_tasks_ring_pop].gr_gain;
         float gb_gain = _tasks_ring[_tasks_ring_pop].gb_gain;
         float b_gain = _tasks_ring[_tasks_ring_pop].b_gain;
-        int fine = _tasks_ring[_tasks_ring_pop].fine;
         int resolution = _tasks_ring[_tasks_ring_pop].resolution;
         
         s->set_agc_gain_custom(s, r_gain, gr_gain, gb_gain, b_gain);
         // ar0130_set_bin(resolution);
     }
     int coarse = _tasks_ring[_tasks_ring_pop].coarse;
+    int fine = _tasks_ring[_tasks_ring_pop].fine;
     if(coarse>0)
     {
-        s->set_aec_exposure(s, coarse, 1);
+        s->set_exposure_ctrl(s,0);
+        delay(5);
+        s->set_aec_exposure(s, coarse, fine);
     }
     else
     {
-        double offset = capture_exposure_offset();
-        double diff = 1;
-        if(_last_coarse<100)
-        {
-            diff = 1;
-            offset /=5;
-        }
-        else if(_last_coarse<200)
-        {
-            diff = 2;
-        }
-        else if(_last_coarse<500)
-        {
-            diff = 5;
-        }
-        else if(_last_coarse<1000)
-        {
-            diff = 10;
-        }
-        else if(_last_coarse<2000)
-        {
-            diff = 25;
-        }
-        else if(_last_coarse<5000)
-        {
-            diff = 40;
-        }
-        else if(_last_coarse<10000)
-        {
-            diff = 80;
-        }
-        else if(_last_coarse<20000)
-        {
-            diff = 160;
-        }
-        double absoft = offset<0?-offset:offset;
-        _last_coarse -= offset*((diff));
-        if(_last_coarse<1)
-        {
-            _last_coarse = 1;
-        }
-        if(_last_coarse>20000)
-        {
-            _last_coarse = 20000;
-        }
-        s->set_aec_exposure(s, _last_coarse, 1);
+        s->set_exposure_ctrl(s,1);
     }
     int mode = _tasks_ring[_tasks_ring_pop].mode;
     _tasks_ring[_tasks_ring_pop].count--;
