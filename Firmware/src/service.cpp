@@ -43,7 +43,9 @@ void service_reconnect()
     //     timeout--;
     // }
     // LOG_UART("\n");
-    // WiFi.setSleep(true);
+    #ifndef BT_ENABLED
+    WiFi.setSleep(true);
+    #endif
     // LOG_UART("IP address: %s\n", WiFi.localIP().toString().c_str());
 }
 void wifi_task() // void *arg
