@@ -522,6 +522,7 @@ void service_parse(char *msg)
     }
     // capture M10 Txxxxx
     // mode switch M11 Sx
+    // time set M12 Txxxxxxxxxx
     // set coarse M20 Txxxxx
     // set gain M21 Rxxx.x Gxxx.x Bxxx.x
     // add task M30  Dssss Issss Fxxxx Txxxxx Rxxx.x Gxxx.x Bxxx.x
