@@ -11,6 +11,8 @@
 ![architecture](assets/ezcam.jpg "ezcam_architecture")
 
 ## PCB
+* Shared PCB Project: https://oshwlab.com/flashindream/opennightskycam
+
 ![pcb](assets/ezcam_top.jpg "ezcam_top")
 ![pcb](assets/ezcam_bottom.jpg "ezcam_bottom")
 ![pcb](assets/ar0130cs.jpg "ar0130cs")
