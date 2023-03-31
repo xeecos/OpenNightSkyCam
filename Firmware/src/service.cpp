@@ -457,6 +457,14 @@ void service_parse(char *msg)
             }
         }
         break;
+        case 12:
+        {
+            
+            end = indexOf(msg, 'T', msg_idx, 1) + 1;
+            int time = strtod(msg + end, NULL);
+            global_set_time(time);
+        }
+        break;
         case 20:
         {
             end = indexOf(msg, 'T', msg_idx, 1) + 1;
