@@ -37,3 +37,8 @@ Open Night Sky Cam is a long exposure time camera based on ESP32-S3.
 * open http://192.168.43.1/index.html on your browser
 * close the U-DISK mode on Setting tab
 * then preview it 
+
+## Video
+* https://www.youtube.com/watch?v=hJdsUjagThk
+* https://www.youtube.com/watch?v=0wduta1NCjs
+* https://www.youtube.com/watch?v=QMlR2NVDoeQ
