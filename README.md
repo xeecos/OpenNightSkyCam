@@ -4,7 +4,7 @@ Open Night Sky Cam is a long exposure time camera based on ESP32-S3.
 ## Features
 * Based On ESP32-S3-Wroom-1 Module with 8MB Flash and 8MB PSRAM
 * Long Exposure Time
-* TF card supported by SDMMC 
+* TF card supported by SDMMC or SdFat Library
 * U-Disk Mode, USB 2.0 HighSpeed Write and Read Files
 * C-Mount, also Support M12 Lens and 1.25 Inch Telescope Mount with adapter
 * USB Serial Mode
