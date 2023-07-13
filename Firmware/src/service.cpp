@@ -245,12 +245,14 @@ void wifi_task() // void *arg
         sprintf(json_str,"{\"err\":0,\"time\":\"%d\"}\0",s->status.coarse);
         server.send(200, "text/json", json_str);
         free(json_str); 
+        isRequestImage = false;
         capture_take(true); });
     
     server.on("/capture/preview", [=]()
     { 
         isRequestImage = true;
-        capture_start(true); 
+        capture_take(true); 
+        server.send(200, "image/jpeg");
     });
     server.on("/storage/set", [=]()
               { 
@@ -357,7 +359,8 @@ void wifi_task() // void *arg
 
 void service_send_image(char*buf, int len)
 {
-    server.send_P(200, "image/jpeg", (const char*)buf, len);
+    printf("%d\n",len);
+    server.sendContent_P((const char*)buf, len);
     isRequestImage = false;
 }
 static bool wifi_on = true;

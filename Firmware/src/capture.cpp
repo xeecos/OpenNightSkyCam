@@ -185,10 +185,11 @@ void capture_run()
             }
             else
             {
-                LOG_UART("jpg start\n");
                 if(service_is_requesting_image())
                 {
+                    LOG_UART("jpg start\n");
                     service_send_image((char*)out_jpg_buf, out_jpg_buf_len);
+                    LOG_UART("jpg end\n");
                 }
                 else
                 {
@@ -199,7 +200,6 @@ void capture_run()
                     #endif
                 }
                 service_turn_on();
-                LOG_UART("jpg end\n");
             }
 
             previewing = false;
