@@ -34,7 +34,7 @@
 #define I2C_EN      -1
 #define CMOS_BITS   8
 #define CMOS_FRAMESIZE FRAMESIZE_MXGA
-#define XCLK_FREQ   6000000
+#define XCLK_FREQ   40000000
 
 #define LCD_CAM_DMA_NODE_BUFFER_MAX_SIZE (2048)
 

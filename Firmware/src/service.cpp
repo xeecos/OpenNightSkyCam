@@ -18,6 +18,7 @@
 #include "AsyncUDP.h"
 WebServer server(80);
 AsyncUDP udp;
+bool isRequestImage = false;
 void service_reconnect()
 {
     WiFi.softAP("Night-Sky", "");
@@ -245,6 +246,12 @@ void wifi_task() // void *arg
         server.send(200, "text/json", json_str);
         free(json_str); 
         capture_take(true); });
+    
+    server.on("/capture/preview", [=]()
+    { 
+        isRequestImage = true;
+        capture_start(true); 
+    });
     server.on("/storage/set", [=]()
               { 
         if(server.hasArg("mode"))
@@ -347,6 +354,12 @@ void wifi_task() // void *arg
     server.serveStatic("/", SPIFFS, "/");
     server.begin();
 }
+
+void service_send_image(char*buf, int len)
+{
+    server.send_P(200, "image/jpeg", (const char*)buf, len);
+    isRequestImage = false;
+}
 static bool wifi_on = true;
 void service_turn_off()
 {
@@ -354,7 +367,7 @@ void service_turn_off()
     {
         // LOG_UART("wifi off\n");
         wifi_on = false;
-        esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20);
+        // esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20);
         // esp_wifi_disconnect();
         // esp_wifi_set_ps(WIFI_PS_MAX_MODEM);
     }
@@ -365,7 +378,7 @@ void service_turn_on()
     {
         // LOG_UART("wifi on\n");
         wifi_on = true;
-        esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT40);
+        // esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT40);
         // esp_wifi_connect();
         // esp_wifi_set_ps(WIFI_PS_MIN_MODEM);
     }
@@ -549,4 +562,8 @@ void service_run()
 
 void service_clear()
 {
+}
+bool service_is_requesting_image()
+{
+    return isRequestImage;
 }

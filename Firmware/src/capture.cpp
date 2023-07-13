@@ -186,11 +186,18 @@ void capture_run()
             else
             {
                 LOG_UART("jpg start\n");
-#ifndef ENABLE_SOCKET_SERVER
-                tf_begin_write("/preview/latest.jpg");
-                tf_write_file(out_jpg_buf, out_jpg_buf_len);
-                tf_end_write();
-#endif
+                if(service_is_requesting_image())
+                {
+                    service_send_image((char*)out_jpg_buf, out_jpg_buf_len);
+                }
+                else
+                {
+                    #ifndef ENABLE_SOCKET_SERVER
+                    tf_begin_write("/preview/latest.jpg");
+                    tf_write_file(out_jpg_buf, out_jpg_buf_len);
+                    tf_end_write();
+                    #endif
+                }
                 service_turn_on();
                 LOG_UART("jpg end\n");
             }

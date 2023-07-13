@@ -106,12 +106,14 @@ function request(url) {
 async function onShot() {
     document.getElementById('appLoading').style.display = 'block';
     await onExposure();
-    request('/capture/shot').then(res => {
-        let obj = JSON.parse(res);
-        setTimeout(() => {
-            document.getElementById('appLoading').style.display = 'none'
-        }, obj.time * 1.0 + waitTime);
-    });
+
+    document.getElementById('preview-img').src = '/capture/preview?time=' + Date.now();
+    // request('/capture/preview').then(res => {
+    //     let obj = JSON.parse(res);
+    //     setTimeout(() => {
+    //         document.getElementById('appLoading').style.display = 'none'
+    //     }, obj.time * 1.0 + waitTime);
+    // });
 }
 function onReload() {
     document.getElementById('preview-img').src = '/preview/latest.jpg?time=' + Date.now();
