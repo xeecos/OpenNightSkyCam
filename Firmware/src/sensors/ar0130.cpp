@@ -34,9 +34,9 @@ uint16_t ar0130_default_regs[120][2] = {
 	{0x30EA, 0b110000000000},  // Black Level Correction
 	{0x3044, 0b10000000000},	  // Row-wise Noise Correction
 	{0x30D4, 0b1110000000000111}, // COLUMN_CORRECTION
-	{0x3002, 0x0002},			  // Y_ADDR_START = 2
+	{0x3002, 0x0000},			  // Y_ADDR_START = 2
 	{0x3004, 0x0000},			  // X_ADDR_START = 0
-	{0x3006, 0x03C1},			  // Y_ADDR_END
+	{0x3006, 0x03C0},			  // Y_ADDR_END
 	{0x3008, 0x04FF},			  // X_ADDR_END = 1279
 	{0x300A, 0x03DE},			  // Vertical blanking / FRAME_LENGTH_LINES
 	{0x300C, 0x0672+200},			  // Horizontal blanking / LINE_LENGTH_PCK = 1650
