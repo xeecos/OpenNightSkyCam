@@ -322,7 +322,7 @@ static int set_quality(sensor_t *sensor, int quality)
 }
 static int set_hblank(sensor_t *sensor, int blank)
 {
-	SCCB_Write16_16(sensor->slv_addr, 0x300C, (1650 + blank));
+	SCCB_Write16_16(sensor->slv_addr, 0x300C, (0x0596 + blank));
 	return 0;
 }
 static int set_vblank(sensor_t *sensor, int blank)
