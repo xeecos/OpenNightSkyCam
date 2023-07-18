@@ -90,7 +90,7 @@ function openPage(evt, pageName) {
     document.getElementById(pageName).style.display = "block";
     evt.currentTarget.className += " active";
 }
-let waitTime = 1000;
+let waitTime = 2000;
 function request(url) {
     return new Promise(resolve => {
         document.getElementById('appLoading').style.display = 'block';

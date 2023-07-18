@@ -42,9 +42,9 @@ uint16_t ar0130_default_regs[120][2] = {
 	{0x300C, 0x0596},			  // Horizontal blanking / LINE_LENGTH_PCK = 1650
 	{0x3100, 0x0003},
 	// {0x31D0, 0x0003},			  // HDR_COMP
-	{0x302C, 4},				  // P1=1~16 VT_SYS_CLK_DIV
+	{0x302C, 6},				  // P1=1~16 VT_SYS_CLK_DIV
 	{0x302A, 8},				  // P2=4~16 VT_PIX_CLK_DIV
-	{0x302E, 4},				  // N=1~63 PRE_PLL_CLK_DIV
+	{0x302E, 6},				  // N=1~63 PRE_PLL_CLK_DIV
 	{0x3030, 32},				  // M=32~255 PLL_MULTIPLIER
 	{0x3032, 0x0},				  // binning = 00x3056, gain_level & 0xff);
 	{0x30B0, 0x1300 | 0b1000100}, // M=32~255 PLL_MULTIPLIER
