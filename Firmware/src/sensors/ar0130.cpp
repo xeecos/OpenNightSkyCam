@@ -13,7 +13,7 @@
 
 uint16_t ar0130_default_regs[120][2] = {
 	{0x301A, 0x0001},
-	{0x301A, 0b1000111011000},
+	{0x301A, 0b1000111011100},
 	{0x3044, 0x0400},
 	{0x3064, 0b1100110000010}, // DISABLE EMB. DATA
 	{0x309E, 0x0000},		   // DCDS_PROG_START_ADDR
@@ -465,16 +465,9 @@ int ar0130_detect(int slv_addr, sensor_id_t *id)
 }
 static int take_photo(sensor_t *sensor, bool preview, fileformat_t format)
 {
-	// delay(5);
-	if(preview)
-	{
-		// delay(20);
-		service_turn_off();
-		// delay(100);
-	}
 	#ifdef EXPOSURE
 	digitalWrite(LED_IO, HIGH);
-	while (digitalRead(VSYNC));
+	// while (digitalRead(VSYNC));
 	digitalWrite(EXPOSURE, HIGH);
 	#endif
 	capture_start(preview, format);

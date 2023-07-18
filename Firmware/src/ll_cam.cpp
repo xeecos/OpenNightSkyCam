@@ -111,8 +111,6 @@ bool ll_cam_start(cam_obj_t *cam, int frame_pos)
 
     LCD_CAM.cam_ctrl1.cam_start = 0;
 
-    // while(digitalRead(VSYNC));
-   
     GDMA.channel[cam->dma_num].in.int_clr.in_suc_eof = 1;
     GDMA.channel[cam->dma_num].in.int_ena.in_suc_eof = 1;
 

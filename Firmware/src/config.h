@@ -32,9 +32,9 @@
 #define PWDN        -1
 #define RESET       -1
 #define I2C_EN      -1
-#define CMOS_BITS   12
+#define CMOS_BITS   8
 #define CMOS_FRAMESIZE FRAMESIZE_MXGA
-#define XCLK_FREQ   20000000
+#define XCLK_FREQ   40000000
 
 #define LCD_CAM_DMA_NODE_BUFFER_MAX_SIZE (2048)
 
