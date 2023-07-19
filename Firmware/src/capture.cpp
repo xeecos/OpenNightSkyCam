@@ -129,9 +129,10 @@ void IRAM_ATTR capture_task(void *arg)
                     uint8_t *rgb = (uint8_t *)ps_malloc(w * h * 3);
                     if(rgb)
                     {
+                        int ww = w*3;
                         for (int line = 0; line < h; line++)
                         {
-                            convert_line_format(output->buf, PIXFORMAT_RAW, rgb + line * w * 3, w, 3, line);
+                            convert_line_format(output->buf, PIXFORMAT_RAW, rgb + line * ww, w, 3, line);
                         }
                         void *el = jpeg_enc_open(&info);
                         jpeg_enc_process(el, rgb, w * h * 3, out_jpg_buf, 1024 * 800, &out_jpg_buf_len);

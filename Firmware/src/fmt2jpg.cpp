@@ -37,8 +37,7 @@ IRAM_ATTR void convert_line_format(uint8_t *src, pixformat_t format, uint8_t *ds
     sensor_t *s = esp_camera_sensor_get();
     uint16_t w = resolution[s->status.framesize].width>>s->status.binning;
     uint16_t h = resolution[s->status.framesize].height>>s->status.binning;
-    int i = 0, o = 0, l = 0;
-    l = w;
+    int i = 0, o = 0, l = w;
     uint8_t r = 0, g = 0, b = 0;
     if(format==PIXFORMAT_GRAYSCALE)
     {
@@ -46,79 +45,37 @@ IRAM_ATTR void convert_line_format(uint8_t *src, pixformat_t format, uint8_t *ds
     }
     else if(format==PIXFORMAT_RAW)
     {
-        // if (line%2 == 0)
-        // {
-        //     for(int j=0;j<l;j++)
-        //     {
-        //         if(j%2==0)
-        //         {
-        //             r = src[j + (line)*l];
-        //             g = 0;
-        //             b = 0;
-        //         }
-        //         else
-        //         {
-        //             r = 0;
-        //             g = src[j + (line)*l];
-        //             b = 0;
-        //         }
-        //         dst[o++] = r;
-        //         dst[o++] = g;
-        //         dst[o++] = b;
-        //     }
-        // }
-        // else
-        // {
-        //     for(int j=0;j<l;j++)
-        //     {
-        //         if(j%2==0)
-        //         {
-        //             r = 0;
-        //             g = src[j + (line)*l];
-        //             b = 0;
-        //         }
-        //         else
-        //         {
-        //             r = 0;
-        //             g = 0;
-        //             b = src[j + (line)*l];
-        //         }
-        //         dst[o++] = r;
-        //         dst[o++] = g;
-        //         dst[o++] = b;
-        //     }
-        // }
-        // return;
+        int ll = l*2;
         if (line == 0)
         {
-            r = src[1 + l * 2];
-            g = src[0 + l * 2];
-            b = src[l + l * 2];
+            r = src[1 + ll];
+            g = src[0 + ll];
+            b = src[l + ll];
             dst[o++] = r;
             dst[o++] = g;
             dst[o++] = b;
             for (int j = 1; j < l - 1; j++)
             {
-                if (j % 2 == 0)
+                if ((j & 1) == 0)
                 {
-                    r = (src[j + 1 + l * 2] + src[j - 1 + l * 2]) >> 1;
-                    g = src[j + l * 2];
-                    b = (src[j + l + l * 2]);
+                    r = (src[j + 1 + ll] + src[j - 1 + ll]) >> 1;
+                    g = src[j + ll];
+                    b = (src[j + l + ll]);
                 }
                 else
                 {
-                    r = src[j + l * 2];
-                    g = (src[j - 1 + l * 2] + src[j + 1 + l * 2]) >> 1; //+src[j+(line+1)*l]+src[j+(line-1)*l]
-                    b = (src[j - 1 + l + l * 2] + src[j + 1 + l + l * 2]) >> 1;
+                    r = src[j + ll];
+                    g = (src[j - 1 + ll] + src[j + 1 + ll]) >> 1; //+src[j+(line+1)*l]+src[j+(line-1)*l]
+                    b = (src[j - 1 + l + ll] + src[j + 1 + l + ll]) >> 1;
                 }
                 dst[o++] = r;
                 dst[o++] = g;
                 dst[o++] = b;
             }
             int end_idx = l - 1;
-            r = src[end_idx + l * 2];
-            g = (src[end_idx + l + l * 2] + src[end_idx - 1 + l * 2]) >> 1;
-            b = src[end_idx - 1 + l + l * 2];
+            r = src[end_idx + ll];
+            g = (src[end_idx + l + ll] + src[end_idx - 1 + ll]) >> 1;
+            b = src[end_idx - 1 + l + ll];
             dst[o++] = r;
             dst[o++] = g;
             dst[o++] = b;
@@ -137,7 +94,7 @@ IRAM_ATTR void convert_line_format(uint8_t *src, pixformat_t format, uint8_t *ds
                 g = src[j + (line)*l];
                 b = (src[j + 1 + line * l] + src[j - 1 + line * l]) >> 1;
 
-                if (j % 2 == 0)
+                if ((j & 1) == 0)
                 {
                     r = (src[j - 1 + (line - 1) * l] + src[j + 1 + (line - 1) * l]) >> 1;
                     g = (src[j + (line - 1) * l]);
@@ -163,7 +120,7 @@ IRAM_ATTR void convert_line_format(uint8_t *src, pixformat_t format, uint8_t *ds
         }
         else
         {
-            if (line % 2 == 0)
+            if ((line & 1) == 0)
             {
                 r = src[1 + line * l];
                 g = src[(line)*l];
@@ -180,9 +137,9 @@ IRAM_ATTR void convert_line_format(uint8_t *src, pixformat_t format, uint8_t *ds
             dst[o++] = b;
             for (int j = 1; j < l - 1; j++)
             {
-                if (line % 2 == 0)
+                if ((line & 1) == 0)
                 {
-                    if (j % 2 == 0)
+                    if ((j & 1) == 0)
                     {
                         r = (src[j + 1 + line * l] + src[j - 1 + line * l]) >> 1;
                         g = src[j + (line)*l];
@@ -191,16 +148,16 @@ IRAM_ATTR void convert_line_format(uint8_t *src, pixformat_t format, uint8_t *ds
                     else
                     {
                         r = src[j + (line)*l];
-                        g = (src[j - 1 + (line)*l] + src[j + 1 + (line)*l]) >> 1; //+src[j+(line+1)*l]+src[j+(line-1)*l]
+                        g = (src[j - 1 + (line)*l] + src[j + 1 + (line)*l]) >> 1; 
                         b = (src[j - 1 + (line - 1) * l] + src[j - 1 + (line + 1) * l] + src[j + 1 + (line - 1) * l] + src[j + 1 + (line + 1) * l]) >> 2;
                     }
                 }
                 else
                 {
-                    if (j % 2 == 0)
+                    if ((j & 1) == 0)
                     {
                         r = (src[j - 1 + (line - 1) * l] + src[j - 1 + (line + 1) * l] + src[j + 1 + (line - 1) * l] + src[j + 1 + (line + 1) * l]) >> 2;
-                        g = (src[j + (line + 1) * l] + src[j + (line - 1) * l]) >> 1; //+src[j-1+(line)*l]+src[j+1+(line)*l]
+                        g = (src[j + (line + 1) * l] + src[j + (line - 1) * l]) >> 1;
                         b = src[j + (line)*l];
                     }
                     else
@@ -215,7 +172,7 @@ IRAM_ATTR void convert_line_format(uint8_t *src, pixformat_t format, uint8_t *ds
                 dst[o++] = b;
             }
             int end_idx = l - 1;
-            if (line % 2 == 0)
+            if ((line & 1) == 0)
             {
                 r = src[end_idx + (line)*l];
                 g = (src[end_idx + (line + 1) * l] + src[end_idx - 1 + (line)*l] + src[end_idx + (line - 1) * l]) / 3;
